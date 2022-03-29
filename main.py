@@ -5,7 +5,6 @@ from board import board
 from player import player
 from ai import ai
 import os
-from time import sleep
 
 
 # app Class
@@ -22,7 +21,9 @@ class app:
         self.player = []
         # every player gets different symbols
         self.symbols = [None, None]
+        # there are also default symbols for each Player
         self.default_symbols = ["X", "O"]
+        # if the user selects the one-Player mode, in self.ai will be a Player Object for the AI
         self.ai = None
 
     # create the game-board and clears it
@@ -103,29 +104,39 @@ class app:
             # while the Player doesn't a name
             while name == "":
                 # player should enter a name
-                name = input("Geben Sie den Namen für Spieler " + str(i+1) + " ein: ")
+                name = input("Geben Sie den Namen für Spieler " + str(i + 1) + " ein: ")
                 # if the player clicked enter without enterd a name
                 if name == "":
                     # print hint
                     print("Bitte gib einen Namen ein")
 
-
-            # ToDo: Kommentieren
+            # Player writes a single character for the symbol
             symbol = input("Geben Sie ein Symbol für " + name + " ein (standart ist " + self.default_symbols[i] + "): ")
 
+            # while the symbol is already used or if the user input is more than one character
             while symbol in self.symbols or len(symbol) > 1 or symbol == " ":
+
+                # prints warning
                 if symbol in self.symbols:
                     print("Zeichen wurde schon benutzt")
+
+                # prints warning
                 elif len(symbol) > 1:
                     print("Symbol darf nicht mehr als ein Zeichen enthalten")
+
+                # prints warning
                 else:
                     print("Symbol darf kein Leerzeichen sein")
 
+                # ask the user again for the symbol
                 symbol = input("Geben Sie ein Symbol für " + name + " ein (standart ist " + self.default_symbols[i] + "): ")
 
+            # if the user clicked enter without an entry
             if symbol == "":
+                # use the default symbol
                 symbol = self.default_symbols[i]
 
+            # saves the used symbol in self.symbols
             self.symbols[i] = symbol
 
             # creates an new entry in the list self.player
@@ -160,18 +171,27 @@ class app:
             # shows the game-board
             self.board.show_board()
 
-            # check if one of the user winns
+            # check if one of the user wins
             # if the function returns -1, the game-board is full
-            # then break the loop too
             if self.board.is_winning() or self.board.is_winning() == -1:
-                # if a user won then break the loop
-                break
+                # the game is finished
+                # selects the start player for the next round
+                player = self.first_player
+
+                # calls self.finish_game()
+                # the function prints the winner and asks the player
+                # if they would like to continue the game
+                if self.finish_game() == 'y':
+                    # if the user input was y, the loop will continue
+                    continue
+                else:
+                    # if the user input was n, the loop breaks
+                    break
 
             # ToDo: Wenn ein Spieler gewonnen hat, markier die Siegesfelder farbig
             # Hierzu:   CRED = '\033[91m'
             #           CEND = '\033[0m'
             #           print(CRED + "Error, does not compute!" + CEND)
-            # ToDo: Zähle, wie viele Spiele die einzelnen Spieler schon gewonnen haben
 
             # Info for the Player
             print("\nSpieler {} ist am Zug".format(self.player[player].name))
@@ -184,15 +204,16 @@ class app:
                 # set error = None so the error disappear in the next round
                 error = None
 
-            # ToDo: Kommentare
+            # if the current Player is an AI
             if self.player[player].is_ai:
-
+                # AI should move
                 self.ai.move()
 
+            # if the current Player is not an AI
             else:
 
                 # current Player writes the move
-                position = input("Zug eingeben (z.B. a1): ")
+                position = input("Zug eingeben (z.B. a1): ").lower()
 
                 # calls the move function of the player
                 # returns False if the move was invalid
@@ -208,31 +229,56 @@ class app:
             if player == len(self.player):
                 player = 0
 
+    # clears the game-board and asks if the player want to continue the game
+    def finish_game(self):
         # winning_player contains either the number of the player who wons
         # or -1 -> means the game-board is full
         winning_player = self.board.is_winning()
 
         # if the game-baord is full
         if winning_player == -1:
-            #print error
+            # print error
             print("Keine freien Züge mehr... das Spiel ist unentschieden! Aber´s Schatzü ist trotzdem toll! Love you!")
         else:
             # print congrats
             print("Spieler {} hat gewonnen!!!".format(self.player[int(winning_player)].name))
 
+        # clears the game-board
+        self.board.clear()
+
+        # the user input is in continue_game
+        continue_game = None
+
+        # while the user input isn't valid
+        while continue_game != 'y' and continue_game != 'n':
+            # saves the user input in contine_game
+            continue_game = input("Neue Runde beginnen (y/n)? ").lower()
+
+        # return the user input
+        return continue_game
+
+    # Player decided which Player starts the game
     def select_player(self):
 
+        # the ID of the player which begins will be saved in self.first_player
         self.first_player = 0
 
+        # while the variable isn't 1 or 2
         while self.first_player != 1 and self.first_player != 2:
 
+            # try because the user could enter a string
             try:
 
+                # Player input
                 self.first_player = int(input("Welcher Spieler soll anfagen (1: " + self.player[0].name + ", 2: " + self.player[1].name + ")? "))
 
+            # if the Player input wasn't an int
             except ValueError:
+                # pass
                 pass
 
+        # the Player selected 1 or 2
+        # but the Player IDs are 0 or 1
         self.first_player -= 1
 
     # run-function
