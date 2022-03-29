@@ -44,6 +44,8 @@ class board:
     def is_winning(self):
 
         letters = ["a", "b", "c"]
+        CRED = '\033[91m'
+        CEND = '\033[0m'
 
         # for horizontal lines
         for i in range(1,4):
@@ -51,6 +53,11 @@ class board:
             # and if the related filds are filled with X or O (depends on the player)
             if self.gameBoard["a" + str(i)][1] is not None and self.gameBoard["a" + str(i)][1] == self.gameBoard["b" + str(i)][1] and self.gameBoard["b" + str(i)][1] == self.gameBoard["c" + str(i)][1]:
                 # returns the player number
+
+                self.gameBoard["a" + str(i)][0] = CRED + self.gameBoard["a" + str(i)][0] + CEND
+                self.gameBoard["b" + str(i)][0] = CRED + self.gameBoard["b" + str(i)][0] + CEND
+                self.gameBoard["c" + str(i)][0] = CRED + self.gameBoard["c" + str(i)][0] + CEND
+
                 return str(self.gameBoard["a" + str(i)][1])
 
         # for Vertical lines
@@ -59,16 +66,32 @@ class board:
             # and if the related filds are filled with X or O (depends on the player)
             if self.gameBoard[i + str(1)][1] is not None and self.gameBoard[i + str(1)][1] == self.gameBoard[i + str(2)][1] and self.gameBoard[i + str(2)][1] == self.gameBoard[i + str(3)][1]:
                 # returns the player number
+
+                self.gameBoard[i + str(1)][0] = CRED + self.gameBoard[i + str(1)][0] + CEND
+                self.gameBoard[i + str(2)][0] = CRED + self.gameBoard[i + str(2)][0] + CEND
+                self.gameBoard[i + str(3)][0] = CRED + self.gameBoard[i + str(3)][0] + CEND
+
                 return str(self.gameBoard[i + str(1)][1])
 
         # for diagonal lines
         # if the fields a1, b2, c3 got the same symbol (X or O)
         if self.gameBoard["a1"][1] is not None and self.gameBoard["a1"][1] == self.gameBoard["b2"][1] and self.gameBoard["b2"][1] == self.gameBoard["c3"][1]:
             # returns the player number
+
+            self.gameBoard["a1"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["b2"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["c3"][0] = CRED + self.gameBoard["a1"][0] + CEND
+
             return str(self.gameBoard["a1"][1])
+
         # if the fields c1, b2, a3 got the same symbol (X or O)
         if self.gameBoard["c1"][1] is not None and self.gameBoard["c1"][1] == self.gameBoard["b2"][1] and self.gameBoard["b2"][1] == self.gameBoard["a3"][1]:
             # returns the player number
+
+            self.gameBoard["c1"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["b2"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["a3"][0] = CRED + self.gameBoard["a1"][0] + CEND
+
             return str(self.gameBoard["c1"][1])
 
         full = True

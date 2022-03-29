@@ -178,6 +178,9 @@ class app:
                 # selects the start player for the next round
                 player = self.first_player
 
+                self.clear()
+                self.board.show_board()
+
                 # calls self.finish_game()
                 # the function prints the winner and asks the player
                 # if they would like to continue the game
@@ -187,11 +190,6 @@ class app:
                 else:
                     # if the user input was n, the loop breaks
                     break
-
-            # ToDo: Wenn ein Spieler gewonnen hat, markier die Siegesfelder farbig
-            # Hierzu:   CRED = '\033[91m'
-            #           CEND = '\033[0m'
-            #           print(CRED + "Error, does not compute!" + CEND)
 
             # Info for the Player
             print("\nSpieler {} ist am Zug".format(self.player[player].name))
@@ -280,6 +278,16 @@ class app:
         # the Player selected 1 or 2
         # but the Player IDs are 0 or 1
         self.first_player -= 1
+
+    # saves the current score
+    def save_score(self):
+        # ToDo: Spielstand speichern
+        pass
+
+    # loads the score
+    def load_score(self):
+        # ToDo: Spielstand laden
+        pass
 
     # run-function
     # start the program
