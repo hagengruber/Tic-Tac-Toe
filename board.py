@@ -79,8 +79,8 @@ class board:
             # returns the player number
 
             self.gameBoard["a1"][0] = CRED + self.gameBoard["a1"][0] + CEND
-            self.gameBoard["b2"][0] = CRED + self.gameBoard["a1"][0] + CEND
-            self.gameBoard["c3"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["b2"][0] = CRED + self.gameBoard["b2"][0] + CEND
+            self.gameBoard["c3"][0] = CRED + self.gameBoard["c3"][0] + CEND
 
             return str(self.gameBoard["a1"][1])
 
@@ -88,9 +88,9 @@ class board:
         if self.gameBoard["c1"][1] is not None and self.gameBoard["c1"][1] == self.gameBoard["b2"][1] and self.gameBoard["b2"][1] == self.gameBoard["a3"][1]:
             # returns the player number
 
-            self.gameBoard["c1"][0] = CRED + self.gameBoard["a1"][0] + CEND
-            self.gameBoard["b2"][0] = CRED + self.gameBoard["a1"][0] + CEND
-            self.gameBoard["a3"][0] = CRED + self.gameBoard["a1"][0] + CEND
+            self.gameBoard["c1"][0] = CRED + self.gameBoard["c1"][0] + CEND
+            self.gameBoard["b2"][0] = CRED + self.gameBoard["b2"][0] + CEND
+            self.gameBoard["a3"][0] = CRED + self.gameBoard["a3"][0] + CEND
 
             return str(self.gameBoard["c1"][1])
 
