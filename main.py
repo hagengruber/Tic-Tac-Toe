@@ -6,6 +6,7 @@ from player import player
 from ai import ai
 import os
 from os.path import exists
+import ast
 
 
 # app Class
@@ -26,6 +27,8 @@ class app:
         self.default_symbols = ["X", "O"]
         # if the user selects the one-Player mode, in self.ai will be a Player Object for the AI
         self.ai = None
+        # contains the Player who currently moves
+        self.current_player = None
 
     # create the game-board and clears it
     def create_board(self):
@@ -36,6 +39,24 @@ class app:
     def showMenu(self):
 
         print("Willkommen zu Tic-Tac-Toe")
+
+        # if there's a save file
+        if exists("saves.dat"):
+
+            # user input will be saved in save_game
+            save_game = str(0)
+            # while user doesn't write y or n
+            while save_game != 'y' and save_game != 'n':
+                # save user input in save_game
+                save_game = input("Soll gespeichertes Spiel geladen werden (y/n)? ").lower()
+
+            # if the user would like to continue the saved game
+            if save_game == 'y':
+                # load the game
+                self.load_score()
+                # returns nothing
+                # break off the function
+                return
 
         # while the player doesnt write 1 or 2 due the number of players
         while self.numberPlayers != 1 and self.numberPlayers != 2:
@@ -84,9 +105,12 @@ class app:
                 # print error and continues the endless loop
                 print("Ungültige Eingabe...")
 
+        # if the user use the Symbol O
         if self.symbols[0] == self.default_symbols[1]:
+            # AI use the Symbol X
             self.symbols[1] = "X"
         else:
+            # if the user doesn't use the Symbol O, AI is using O
             self.symbols[1] = "O"
 
         # creates an new entry in the list self.player
@@ -158,8 +182,11 @@ class app:
     # start game
     def start_game(self):
 
-        # current player
-        player = self.first_player
+        if self.current_player is None:
+
+            # current player
+            self.current_player = self.first_player
+
         # if an error occures it will be saved as an string in error
         error = None
 
@@ -177,7 +204,7 @@ class app:
             if self.board.is_winning() or self.board.is_winning() == -1:
                 # the game is finished
                 # selects the start player for the next round
-                player = self.first_player
+                self.current_player = int(self.first_player)
 
                 self.clear()
                 self.board.show_board()
@@ -195,7 +222,7 @@ class app:
             print("\nFür Speichern und Beenden, 's' eingeben")
 
             # Info for the Player
-            print("\nSpieler {} ist am Zug".format(self.player[player].name))
+            print("\nSpieler {} ist am Zug".format(self.player[int(self.current_player)].name))
 
             # if an error occure
             if error is not None:
@@ -206,7 +233,7 @@ class app:
                 error = None
 
             # if the current Player is an AI
-            if self.player[player].is_ai:
+            if self.player[int(self.current_player)].is_ai:
                 # AI should move
                 self.ai.move()
 
@@ -217,22 +244,22 @@ class app:
                 position = input("Zug eingeben (z.B. a1): ").lower()
 
                 if position == 's':
-                    self.save_score(player)
+                    self.save_score()
                     break
 
                 # calls the move function of the player
                 # returns False if the move was invalid
-                if not self.player[player].move(self.board, position):
+                if not self.player[int(self.current_player)].move(self.board, position):
                     # shows in the next round an error
                     error = "Ungültiger Zug..."
                     # don't continue the current instance of the loop
                     continue
 
             # Next Player
-            player += 1
+            self.current_player += 1
             # if theres no more Player, reset player = 0
-            if player == len(self.player):
-                player = 0
+            if self.current_player == len(self.player):
+                self.current_player = 0
 
     # clears the game-board and asks if the player want to continue the game
     def finish_game(self):
@@ -287,50 +314,98 @@ class app:
         self.first_player -= 1
 
     # saves the current score
-    def save_score(self, current_player):
-        # ToDo: Spielstand speichern
+    def save_score(self):
 
+        # if a save file exists, remove it
         if exists("saves.dat"):
             os.remove("saves.dat")
 
+        # open a new save file, called saves.dat
         f = open("saves.dat", "a")
 
+        # for every entry in the list self.player
         for i in self.player:
+            # saves the number, the symbol and the name of every Player and if it's an AI
             f.write("(" + str(i.num))
             f.write("(" + str(i.symbol))
             f.write("(" + str(i.name))
             f.write("(" + str(i.is_ai))
 
+        # saves the game-board
         f.write("(" + str(self.board.get_board()))
-        f.write("(" + str(current_player))
+        # saves the current Player (0 or 1)
+        f.write("(" + str(self.current_player))
+        # saves the first player (if the player finish a round and want to play another)
         f.write("(" + str(self.first_player))
+        # saves the symbols
         f.write("(" + str(self.symbols))
 
+        # if the player chose to play with an AI
         if self.ai is not None:
+            # saves the level of the AI
             f.write("(" + str(self.ai.level))
 
+        # close the file
         f.close()
 
     # loads the score
     def load_score(self):
-        # ToDo: Spielstand laden
-        pass
+
+        # opens the save file
+        f = open("saves.dat", "r")
+        # creates a list
+        # separates the string by every (
+        data = f.read().split('(')
+
+        # create a board
+        self.board = board()
+        # set the board
+        # the ast.literal_eval creates a dictionary instead of a string
+        self.board.set_board(ast.literal_eval(data[9].replace("'", '"')))
+
+        # creates the player
+        for i in range(1, 3):
+            # append an entry in the self.player list
+            self.player.append(player(int(data[i * 4 - 3]), data[i * 4 - 2], data[i * 4] == 'True', data[i * 4 - 1]))
+            # if the player is an AI
+            if data[i * 4] == 'True':
+                # creates an AI object
+                self.ai = ai(self.board, self.player[-1], int(data[13]))
+
+        # set the first player (if the player finish a round and want to play another)
+        self.first_player = data[11]
+
+        # set the symbols
+        # ast.literal_eva creates a list instead of a string
+        self.symbols = ast.literal_eval(data[12])
+
+        # set the current player
+        self.current_player = int(data[10])
+
+        # close the save file
+        f.close()
+        # remove the save file
+        os.remove("saves.dat")
 
     # run-function
     # start the program
     def run(self):
 
-        # shows the menu and selects the number of players
+        # shows the menu, check if there's a save file and selects the number of players
         self.showMenu()
 
-        # creates the game-board
-        self.create_board()
+        # if there's a current Player the Player loaded a game from a save file
+        # in that case, the board and the Players are already set
+        if self.current_player is None:
 
-        # creates players
-        self.create_player()
+            # creates the game-board
+            self.create_board()
 
-        # what player moves first
-        self.select_player()
+            # creates players
+            self.create_player()
+
+            # what player moves first
+            self.select_player()
 
         # run the game
         self.start_game()
