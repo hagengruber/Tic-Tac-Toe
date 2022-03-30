@@ -5,6 +5,7 @@ from board import board
 from player import player
 from ai import ai
 import os
+from os.path import exists
 
 
 # app Class
@@ -191,6 +192,8 @@ class app:
                     # if the user input was n, the loop breaks
                     break
 
+            print("\nFür Speichern und Beenden, 's' eingeben")
+
             # Info for the Player
             print("\nSpieler {} ist am Zug".format(self.player[player].name))
 
@@ -212,6 +215,10 @@ class app:
 
                 # current Player writes the move
                 position = input("Zug eingeben (z.B. a1): ").lower()
+
+                if position == 's':
+                    self.save_score(player)
+                    break
 
                 # calls the move function of the player
                 # returns False if the move was invalid
@@ -280,9 +287,29 @@ class app:
         self.first_player -= 1
 
     # saves the current score
-    def save_score(self):
+    def save_score(self, current_player):
         # ToDo: Spielstand speichern
-        pass
+
+        if exists("saves.dat"):
+            os.remove("saves.dat")
+
+        f = open("saves.dat", "a")
+
+        for i in self.player:
+            f.write("(" + str(i.num))
+            f.write("(" + str(i.symbol))
+            f.write("(" + str(i.name))
+            f.write("(" + str(i.is_ai))
+
+        f.write("(" + str(self.board.get_board()))
+        f.write("(" + str(current_player))
+        f.write("(" + str(self.first_player))
+        f.write("(" + str(self.symbols))
+
+        if self.ai is not None:
+            f.write("(" + str(self.ai.level))
+
+        f.close()
 
     # loads the score
     def load_score(self):
