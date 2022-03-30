@@ -80,9 +80,6 @@ class app:
     # an AI will be created
     def create_ai(self):
 
-        # in userInput will be saved the difficult level
-        level = None
-
         # while the user input is not valid
         # valid -> 1, 2, 3
         while True:
@@ -116,7 +113,7 @@ class app:
         # creates an new entry in the list self.player
         # saves in that entry a new player object
         self.player.append(player(1, self.symbols[1], True, "KI"))
-        self.ai = ai(self.board, self.player[-1], level)
+        self.ai = ai(self.board, self.player[-1], level, self.symbols[0])
 
     # create as much player as in the self.numberPlayers and saves it in a list
     def create_player(self):
@@ -370,7 +367,7 @@ class app:
             # if the player is an AI
             if data[i * 4] == 'True':
                 # creates an AI object
-                self.ai = ai(self.board, self.player[-1], int(data[13]))
+                self.ai = ai(self.board, self.player[-1], int(data[13]), data[i * 4 - 2])
 
         # set the first player (if the player finish a round and want to play another)
         self.first_player = data[11]
