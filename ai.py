@@ -15,6 +15,8 @@ class ai:
         self.level = int(level)
         # the symbol of the enemy
         self.enemy_symbol = enemy_symbol
+        self.path = None
+        self.sub_path = None
 
     # check if a user (Player or AI, depends on the Symbol and number) could win with the next move
     def is_winning(self, symbol, num):
@@ -114,9 +116,249 @@ class ai:
                 # move to a random field
                 self.move_weak()
 
+    def is_first_move(self):
+
+        characters = ["a", "b", "c"]
+        field = self.board.get_board()
+
+        for i in characters:
+            for a in range(1,4):
+                if field[i + str(a)][1] is not None:
+                    return False
+        return True
+
+    def count_moves(self):
+
+        characters = ["a", "b", "c"]
+        count = 0
+        field = self.board.get_board()
+
+        for i in characters:
+            for a in range(1, 4):
+                if field[i + str(a)][1] is not None:
+                    count += 1
+        return count
+
+    def set_path_attack(self):
+
+        field = self.board.get_board()
+
+        if field["b2"][0] != " ":
+            self.path = 2
+            return
+
+        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+            self.path = 3
+            return
+
+        self.path = 1
+
+    def move_path_one(self):
+
+        counts = self.count_moves()
+        field = self.board.get_board()
+
+        if counts == 2:
+            self.set_move_corner()
+
+        elif counts == 4:
+            if self.is_winning(self.player.symbol, self.player.num):
+                self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
+            else:
+                self.player.move(self.board, "b2")
+
+        else:
+            self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
+
+    def set_move_corner(self):
+
+        field = self.board.get_board()
+        if field["a1"][1] == self.player.num:
+            if field["b1"][0] == " ":
+                self.player.move(self.board, "c1")
+            else:
+                self.player.move(self.board, "a3")
+
+        elif field["a3"][1] == self.player.num:
+            if field["b3"][0] == " ":
+                self.player.move(self.board, "c3")
+            else:
+                self.player.move(self.board, "a1")
+
+        elif field["c1"][1] == self.player.num:
+            if field["b1"][0] == " ":
+                self.player.move(self.board, "a1")
+            else:
+                self.player.move(self.board, "c3")
+
+        elif field["c3"][1] == self.player.num:
+            if field["b3"][0] == " ":
+                self.player.move(self.board, "a3")
+            else:
+                self.player.move(self.board, "c1")
+
+    def move_path_three(self):
+
+        counts = self.count_moves()
+
+        if counts == 2:
+            self.set_move_corner()
+
+        elif counts == 4:
+            if self.is_winning(self.player.symbol, self.player.num):
+                self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
+            else:
+                if not self.player.move(self.board, "a1"):
+                    if not self.player.move(self.board, "a3"):
+                        if not self.player.move(self.board, "c1"):
+                            self.player.move(self.board, "c3")
+
+        else:
+            self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
+
+    def move_path_two(self):
+
+        counts = self.count_moves()
+        field = self.board.get_board()
+
+        if counts == 2:
+            if field["a1"][1] == self.player.num:
+                self.player.move(self.board, "c3")
+
+            elif field["a3"][1] == self.player.num:
+                self.player.move(self.board, "c1")
+
+            elif field["c1"][1] == self.player.num:
+                self.player.move(self.board, "a3")
+
+            elif field["c3"][1] == self.player.num:
+                self.player.move(self.board, "a1")
+
+        elif counts == 4:
+            if self.sub_path is None:
+                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+                    self.sub_path = True
+                else:
+                    self.sub_path = False
+
+            if self.sub_path:
+                if field["a1"][0] == " ":
+                    self.player.move(self.board, "a1")
+                elif field["a3"][0] == " ":
+                    self.player.move(self.board, "a3")
+                elif field["c1"][0] == " ":
+                    self.player.move(self.board, "c1")
+                elif field["c3"][0] == " ":
+                    self.player.move(self.board, "c3")
+
+            self.move_middle()
+        else:
+            self.move_middle()
+
+    def attack(self):
+
+        if self.is_first_move():
+            characters = ["a", "c"]
+            digits = [1, 3]
+            self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
+            return
+
+        if self.path is None:
+            self.set_path_attack()
+
+        if self.path == 1:
+            self.move_path_one()
+        if self.path == 2:
+            self.move_path_two()
+        if self.path == 3:
+            self.move_path_three()
+
+    def set_path_defense(self):
+
+        field = self.board.get_board()
+
+        if field["a1"][0] == self.enemy_symbol or  field["a3"][0] == self.enemy_symbol or  field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+            self.path = 1
+
+        elif field["b2"][0] == self.enemy_symbol:
+            self.path = 2
+
+        else:
+            self.path = 3
+
+    def defense_move_path_one(self):
+
+        counts = self.count_moves()
+
+        if counts == 1:
+            self.player.move(self.board, "b2")
+
+        else:
+            self.move_middle()
+
+    def defense_move_path_two(self):
+
+        counts = self.count_moves()
+
+        if counts == 1:
+            digits = [1, 3]
+            characters = ["a", "c"]
+            self.player.move(self.board, characters[randint(0,1)] + str(digits[randint(0, 1)]))
+
+        else:
+            self.move_middle()
+
+    def defense_move_path_three(self):
+
+        counts = self.count_moves()
+        field = self.board.get_board()
+
+        if counts == 1:
+            self.player.move(self.board, "b2")
+
+        elif counts == 3:
+            if self.sub_path is not None:
+                self.move_middle()
+            else:
+                if not (field["a2"][0] == self.enemy_symbol and field["c2"][0] == self.enemy_symbol):
+                    if not (field["b1"][0] == self.enemy_symbol and field["b3"][0] == self.enemy_symbol):
+                        self.sub_path = True
+                        return
+
+                digits = [1, 3]
+                characters = ["a", "c"]
+                self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
+
+        elif counts == 5:
+            win = self.is_winning(self.player.symbol, self.player.num)
+            if win:
+                self.player.move(self.board, win)
+            else:
+                self.set_move_corner()
+
+        else:
+            self.move_middle()
+
+
+    def defense(self):
+
+        if self.path is None:
+            self.set_path_defense()
+
+        if self.path == 1:
+            self.defense_move_path_one()
+        if self.path == 2:
+            self.defense_move_path_two()
+        if self.path == 3:
+            self.defense_move_path_three()
+
     def move_hard(self):
-        # ToDo: Dritte Stufe der KI programmieren
-        pass
+
+        if self.count_moves() % 2 == 0:
+            self.attack()
+
+        else:
+            self.defense()
 
     # move function of AI
     def move(self):
