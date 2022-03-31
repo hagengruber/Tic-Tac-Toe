@@ -66,7 +66,7 @@ class app:
 
                 # select number of players
                 # 1 Player: play with KI
-                # 2 Player: doesnt need the KI
+                # 2 Player: doesn't need the KI
                 self.numberPlayers = int(input("Wie viele Spieler (1-2)? "))
 
                 # if the player doesnt write a valueabled number - show error
@@ -187,7 +187,7 @@ class app:
         # if an error occures it will be saved as an string in error
         error = None
 
-        # run the game in an infiniti loop
+        # run the game in an infinite loop
         while True:
 
             # clears the command line
@@ -264,16 +264,20 @@ class app:
         # or -1 -> means the game-board is full
         winning_player = self.board.is_winning()
 
-        # if the game-baord is full
+        # if the game-board is full
         if winning_player == -1:
             # print error
-            print("Keine freien Züge mehr... das Spiel ist unentschieden! Aber´s Schatzü ist trotzdem toll! Love you!")
+            print("Keine freien Züge mehr... das Spiel ist unentschieden!")
         else:
             # print congrats
             print("Spieler {} hat gewonnen!!!".format(self.player[int(winning_player)].name))
 
         # clears the game-board
         self.board.clear()
+
+        # Sets the strategy for the AI to None
+        self.ai.path = None
+        self.ai.sub_path = None
 
         # the user input is in continue_game
         continue_game = None

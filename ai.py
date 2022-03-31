@@ -317,28 +317,50 @@ class ai:
             self.player.move(self.board, "b2")
 
         elif counts == 3:
-            if self.sub_path is not None:
-                self.move_middle()
-            else:
-                if not (field["a2"][0] == self.enemy_symbol and field["c2"][0] == self.enemy_symbol):
-                    if not (field["b1"][0] == self.enemy_symbol and field["b3"][0] == self.enemy_symbol):
-                        self.sub_path = True
-                        return
+            if not (field["a2"][0] == self.enemy_symbol and field["c2"][0] == self.enemy_symbol):
+                if not (field["b1"][0] == self.enemy_symbol and field["b3"][0] == self.enemy_symbol):
 
-                digits = [1, 3]
-                characters = ["a", "c"]
-                self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
+                    if field["b1"][0] == self.enemy_symbol:
+                        c = ["a", "c"]
+                        self.player.move(self.board, c[randint(0,1)] + "1")
+                    elif field["a2"][0] == self.enemy_symbol:
+                        c = ["1", "3"]
+                        self.player.move(self.board, "a" + c[randint(0,1)])
+                    elif field["b3"][0] == self.enemy_symbol:
+                        c = ["a", "c"]
+                        self.player.move(self.board, c[randint(0,1)] + "3")
+                    elif field["c2"][0] == self.enemy_symbol:
+                        c = ["1", "3"]
+                        self.player.move(self.board, "c" + c[randint(0,1)])
+
+                    return
+
+            digits = [1, 3]
+            characters = ["a", "c"]
+            self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
 
         elif counts == 5:
+
             win = self.is_winning(self.player.symbol, self.player.num)
+            enemy = self.is_winning(self.enemy_symbol, self.player.num -1)
             if win:
                 self.player.move(self.board, win)
+            elif enemy:
+                self.player.move(self.board, enemy)
+
             else:
-                self.set_move_corner()
+
+                characters = ["a", "c"]
+                digits = [1, 3]
+
+                for c in characters:
+                    for d in digits:
+                        if field[c + str(d)][0] == " ":
+                            self.player.move(self.board, c + str(d))
+                            break
 
         else:
             self.move_middle()
-
 
     def defense(self):
 
