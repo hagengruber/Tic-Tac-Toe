@@ -321,17 +321,20 @@ class ai:
                 if not (field["b1"][0] == self.enemy_symbol and field["b3"][0] == self.enemy_symbol):
 
                     if field["b1"][0] == self.enemy_symbol:
-                        c = ["a", "c"]
-                        self.player.move(self.board, c[randint(0,1)] + "1")
+                        if not self.player.move(self.board, "a1"):
+                            self.player.move(self.board, "c1")
+
                     elif field["a2"][0] == self.enemy_symbol:
-                        c = ["1", "3"]
-                        self.player.move(self.board, "a" + c[randint(0,1)])
+                        if not self.player.move(self.board, "a1"):
+                            self.player.move(self.board, "a3")
+
                     elif field["b3"][0] == self.enemy_symbol:
-                        c = ["a", "c"]
-                        self.player.move(self.board, c[randint(0,1)] + "3")
+                        if not self.player.move(self.board, "a3"):
+                            self.player.move(self.board, "c3")
+
                     elif field["c2"][0] == self.enemy_symbol:
-                        c = ["1", "3"]
-                        self.player.move(self.board, "c" + c[randint(0,1)])
+                        if not self.player.move(self.board, "c1"):
+                            self.player.move(self.board, "c3")
 
                     return
 

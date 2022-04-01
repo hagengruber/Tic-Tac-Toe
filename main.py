@@ -71,7 +71,7 @@ class app:
 
                 # if the player doesnt write a valueabled number - show error
                 if self.numberPlayers != 1 and self.numberPlayers != 2:
-                    print("Ungültige Eingabe...")
+                    print("Ungültige Eingabe")
 
             # when the input is not an integer
             except ValueError:
@@ -275,9 +275,11 @@ class app:
         # clears the game-board
         self.board.clear()
 
-        # Sets the strategy for the AI to None
-        self.ai.path = None
-        self.ai.sub_path = None
+        if self.player[0].is_ai or self.player[1].is_ai:
+
+            # Sets the strategy for the AI to None
+            self.ai.path = None
+            self.ai.sub_path = None
 
         # the user input is in continue_game
         continue_game = None
@@ -345,6 +347,8 @@ class app:
         if self.ai is not None:
             # saves the level of the AI
             f.write("(" + str(self.ai.level))
+            f.write("(" + str(self.ai.path))
+            f.write("(" + str(self.ai.sub_path))
 
         # close the file
         f.close()
@@ -367,11 +371,15 @@ class app:
         # creates the player
         for i in range(1, 3):
             # append an entry in the self.player list
+
             self.player.append(player(int(data[i * 4 - 3]), data[i * 4 - 2], data[i * 4] == 'True', data[i * 4 - 1]))
             # if the player is an AI
             if data[i * 4] == 'True':
+                print(data[i * 4 - 2])
                 # creates an AI object
-                self.ai = ai(self.board, self.player[-1], int(data[13]), data[i * 4 - 2])
+                self.ai = ai(self.board, self.player[-1], int(data[13]), data[(i-1) * 4 - 2])
+                self.ai.path = int(data[14])
+                self.ai.sub_path = int(data[14])
 
         # set the first player (if the player finish a round and want to play another)
         self.first_player = data[11]
