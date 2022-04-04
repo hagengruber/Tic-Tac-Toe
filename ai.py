@@ -68,7 +68,7 @@ class ai:
 
                     # if no one wins
                     else:
-                        #sets the board to the "default" state, which is saved in current_board
+                        # sets the board to the "default" state, which is saved in current_board
                         self.board.set_board(
                             {"a1": list(current_board[0]), "a2": list(current_board[1]), "a3": list(current_board[2]),
                              "b1": list(current_board[3]), "b2": list(current_board[4]), "b3": list(current_board[5]),
@@ -156,7 +156,6 @@ class ai:
     def move_path_one(self):
 
         counts = self.count_moves()
-        field = self.board.get_board()
 
         if counts == 2:
             self.set_move_corner()
