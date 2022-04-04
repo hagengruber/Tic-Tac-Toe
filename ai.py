@@ -117,17 +117,22 @@ class ai:
                 # move to a random field
                 self.move_weak()
 
+    # check if the AI has the first move
     def is_first_move(self):
 
+        # iterate through the game board
         characters = ["a", "b", "c"]
         field = self.board.get_board()
 
         for i in characters:
             for a in range(1, 4):
+                # if a field is not free, return False
                 if field[i + str(a)][1] is not None:
                     return False
+        # if there are all field free, return true
         return True
 
+    # returns the number of moves the Player and AI made
     def count_moves(self):
 
         characters = ["a", "b", "c"]
@@ -136,10 +141,12 @@ class ai:
 
         for i in characters:
             for a in range(1, 4):
+                # if the current field is not None, add 1 to count
                 if field[i + str(a)][1] is not None:
                     count += 1
         return count
 
+    # set the Path for Attack
     def set_path_attack(self):
 
         field = self.board.get_board()

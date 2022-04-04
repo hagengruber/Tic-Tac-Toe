@@ -94,12 +94,16 @@ class board:
 
             return str(self.gameBoard["c1"][1])
 
+        # check if the game board is full
         full = True
+        # for all positions in the game board
         for i in letters:
             for a in range(1, 4):
+                # if there's a field which is free, set full to False
                 if self.gameBoard[i + str(a)][0] == " ":
                     full = False
 
+        # if the game board is full, return -1
         if full:
             return -1
 
