@@ -73,7 +73,7 @@ class app:
                 if self.numberPlayers != 1 and self.numberPlayers != 2:
                     print("Ungültige Eingabe")
 
-            # when the input is not an integer
+            # when the input is not an intege
             except ValueError:
                 print("Ungültige Eingabe...")
 
