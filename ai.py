@@ -2,6 +2,7 @@ from time import sleep
 from random import randint
 import player
 
+
 # ai class
 class ai:
 
@@ -122,7 +123,7 @@ class ai:
         field = self.board.get_board()
 
         for i in characters:
-            for a in range(1,4):
+            for a in range(1, 4):
                 if field[i + str(a)][1] is not None:
                     return False
         return True
@@ -276,7 +277,7 @@ class ai:
 
         field = self.board.get_board()
 
-        if field["a1"][0] == self.enemy_symbol or  field["a3"][0] == self.enemy_symbol or  field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
             self.path = 1
 
         elif field["b2"][0] == self.enemy_symbol:
@@ -302,7 +303,7 @@ class ai:
         if counts == 1:
             digits = [1, 3]
             characters = ["a", "c"]
-            self.player.move(self.board, characters[randint(0,1)] + str(digits[randint(0, 1)]))
+            self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
 
         else:
             self.move_middle()
@@ -344,7 +345,7 @@ class ai:
         elif counts == 5:
 
             win = self.is_winning(self.player.symbol, self.player.num)
-            enemy = self.is_winning(self.enemy_symbol, self.player.num -1)
+            enemy = self.is_winning(self.enemy_symbol, self.player.num - 1)
             if win:
                 self.player.move(self.board, win)
             elif enemy:

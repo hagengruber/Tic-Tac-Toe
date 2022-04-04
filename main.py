@@ -85,7 +85,7 @@ class app:
         while True:
 
             # try, because the input have to be an integer
-            # but the user could enter a stirng
+            # but the user could enter a string
             try:
 
                 # level contains the level of difficulty of the AI

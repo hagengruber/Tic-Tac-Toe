@@ -48,7 +48,7 @@ class board:
         CEND = '\033[0m'
 
         # for horizontal lines
-        for i in range(1,4):
+        for i in range(1, 4):
             # if the field xi (for example a1, b1, c1) contains X or O
             # and if the related filds are filled with X or O (depends on the player)
             if self.gameBoard["a" + str(i)][1] is not None and self.gameBoard["a" + str(i)][1] == self.gameBoard["b" + str(i)][1] and self.gameBoard["b" + str(i)][1] == self.gameBoard["c" + str(i)][1]:
@@ -96,7 +96,7 @@ class board:
 
         full = True
         for i in letters:
-            for a in range(1,4):
+            for a in range(1, 4):
                 if self.gameBoard[i + str(a)][0] == " ":
                     full = False
 
