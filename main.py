@@ -221,7 +221,7 @@ class app:
             # Info for the Player
             print("\nSpieler {} ist am Zug".format(self.player[int(self.current_player)].name))
 
-            # if an error occure
+            # if an error occur
             if error is not None:
                 # print the error
                 # this has to be made due the clear
@@ -254,7 +254,7 @@ class app:
 
             # Next Player
             self.current_player += 1
-            # if theres no more Player, reset player = 0
+            # if there's no more Player, reset player = 0
             if self.current_player == len(self.player):
                 self.current_player = 0
 

@@ -155,7 +155,8 @@ class ai:
             self.path = 2
             return
 
-        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][
+            0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
             self.path = 3
             return
 
@@ -243,7 +244,8 @@ class ai:
 
         elif counts == 4:
             if self.sub_path is None:
-                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][
+                    0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
                     self.sub_path = True
                 else:
                     self.sub_path = False
