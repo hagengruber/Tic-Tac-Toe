@@ -4,14 +4,14 @@ import player
 
 
 # ai class
-class ai:
+class Ai:
 
     # define AI
-    def __init__(self, board, player, level, enemy_symbol):
+    def __init__(self, board, play, level, enemy_symbol):
         # the AI needs the board
         self.board = board
         # the player which the AI is controlling
-        self.player = player
+        self.player = play
         # the level (difficulty) of the AI
         self.level = int(level)
         # the symbol of the enemy
@@ -45,7 +45,7 @@ class ai:
                 current_board.append(list(b[c + str(i)]))
 
         # creates a third Player with either the number and symbol of the Player or the AI
-        enemy = player.player(num, symbol, False, "AI")
+        enemy = player.Player(num, symbol, False, "AI")
 
         # check every field in the board
         for i in characters:
@@ -56,24 +56,19 @@ class ai:
                 # if a Player could move in pos
                 if enemy.move(self.board, pos):
 
+                    win = self.board.is_winning()
+
+                    # sets the board to the "default" state, which is saved in current_board
+                    self.board.set_board(
+                        {"a1": list(current_board[0]), "a2": list(current_board[1]), "a3": list(current_board[2]),
+                         "b1": list(current_board[3]), "b2": list(current_board[4]), "b3": list(current_board[5]),
+                         "c1": list(current_board[6]), "c2": list(current_board[7]), "c3": list(current_board[8])})
+
                     # if the player would win with this move
-                    if self.board.is_winning():
-                        # sets the board to the "default" state, which is saved in current_board
-                        self.board.set_board(
-                            {"a1": list(current_board[0]), "a2": list(current_board[1]), "a3": list(current_board[2]),
-                             "b1": list(current_board[3]), "b2": list(current_board[4]), "b3": list(current_board[5]),
-                             "c1": list(current_board[6]), "c2": list(current_board[7]), "c3": list(current_board[8])})
+                    if win:
 
                         # returns the position of the winning field
                         return pos
-
-                    # if no one wins
-                    else:
-                        # sets the board to the "default" state, which is saved in current_board
-                        self.board.set_board(
-                            {"a1": list(current_board[0]), "a2": list(current_board[1]), "a3": list(current_board[2]),
-                             "b1": list(current_board[3]), "b2": list(current_board[4]), "b3": list(current_board[5]),
-                             "c1": list(current_board[6]), "c2": list(current_board[7]), "c3": list(current_board[8])})
 
         # if no won could win with the next move, return false
         return False
@@ -155,8 +150,8 @@ class ai:
             self.path = 2
             return
 
-        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][
-            0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
+                field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
             self.path = 3
             return
 
@@ -244,8 +239,8 @@ class ai:
 
         elif counts == 4:
             if self.sub_path is None:
-                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][
-                    0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
+                        field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
                     self.sub_path = True
                 else:
                     self.sub_path = False
@@ -286,7 +281,8 @@ class ai:
 
         field = self.board.get_board()
 
-        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
+                field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
             self.path = 1
 
         elif field["b2"][0] == self.enemy_symbol:
