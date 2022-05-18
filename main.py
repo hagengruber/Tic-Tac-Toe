@@ -1,5 +1,9 @@
 # main.py
-# main file
+# main file -> model
+
+#
+#   @author: Florian Hagengruber: 22101608
+#   enjoy!
 
 from board import Board
 from player import Player
@@ -7,6 +11,8 @@ from ai import Ai
 import os
 from os.path import exists
 import ast
+import view
+import controller
 
 
 # app Class
@@ -30,77 +36,19 @@ class App:
         # contains the Player who currently moves
         self.current_player = None
         self.first_player = None
+        self.view = view.View()
+        self.controller = controller.Controller(self.view)
 
     # create the game-board and clears it
     def create_board(self):
         self.board = Board()
         self.board.clear()
-
-    # shows the menu and selects the number of players
-    def showMenu(self):
-
-        print("Willkommen zu Tic-Tac-Toe")
-
-        # if there's a save file
-        if exists("saves.dat"):
-
-            # user input will be saved in save_game
-            save_game = str(0)
-            # while user doesn't write y or n
-            while save_game != 'y' and save_game != 'n':
-                # save user input in save_game
-                save_game = input("Soll gespeichertes Spiel geladen werden (y/n)? ").lower()
-
-            # if the user would like to continue the saved game
-            if save_game == 'y':
-                # load the game
-                self.load_score()
-                # returns nothing
-                # break off the function
-                return
-
-        # while the player doesn't write 1 or 2 due the number of players
-        while self.numberPlayers != 1 and self.numberPlayers != 2:
-
-            # try - because the input could be a string
-            try:
-
-                # select number of players
-                # 1 Player: play with KI
-                # 2 Player: doesn't need the KI
-                self.numberPlayers = int(input("Wie viele Spieler (1-2)? "))
-
-                # if the player doesn't write a valuable number - show error
-                if self.numberPlayers != 1 and self.numberPlayers != 2:
-                    print("Ungültige Eingabe")
-
-            # when the input is not an integer
-            except ValueError:
-                print("Ungültige Eingabe...")
+        self.numberPlayers = self.controller.getNumberPlayer()
 
     # an AI will be created
     def create_ai(self):
 
-        # while the user input is not valid -> 1, 2, 3
-        while True:
-
-            # try, because the input have to be an integer
-            # but the user could enter a string
-            try:
-
-                # level contains the level of difficulty of the AI
-                level = int(input("Geben Sie die Schwierigkeitsstufe für die KI ein (1-Leicht, 2-Mittel, 3-Schwer): "))
-                # if the user entered a valid input
-                if 1 <= level <= 3:
-                    # breaks the loop
-                    break
-                else:
-                    # print error and continues the endless loop
-                    print("Ungültige Eingabe...")
-            # if the user entered a string
-            except ValueError:
-                # print error and continues the endless loop
-                print("Ungültige Eingabe...")
+        level = self.controller.getLevelAI()
 
         # if the user use the Symbol O
         if self.symbols[0] == self.default_symbols[1]:
@@ -120,44 +68,7 @@ class App:
 
         for i in range(self.numberPlayers):
 
-            # Saves the Name of the Player in name
-            name = ""
-
-            # while the Player doesn't a name
-            while name == "":
-                # player should enter a name
-                name = input("Geben Sie den Namen für Spieler " + str(i + 1) + " ein: ")
-                # if the player clicked enter without entered a name
-                if name == "":
-                    # print hint
-                    print("Bitte gib einen Namen ein")
-
-            # Player writes a single character for the symbol
-            symbol = input("Geben Sie ein Symbol für " + name + " ein (standard ist " + self.default_symbols[i] + "): ")
-
-            # while the symbol is already used or if the user input is more than one character
-            while (symbol in self.symbols and symbol != "") or len(symbol) > 1 or symbol == " ":
-
-                # prints warning
-                if symbol in self.symbols:
-                    print("Zeichen wurde schon benutzt")
-
-                # prints warning
-                elif len(symbol) > 1:
-                    print("Symbol darf nicht mehr als ein Zeichen enthalten")
-
-                # prints warning
-                else:
-                    print("Symbol darf kein Leerzeichen sein")
-
-                # ask the user again for the symbol
-                symbol = input("Geben Sie ein Symbol für " + name + " ein (standard ist " +
-                               self.default_symbols[i] + "): ")
-
-            # if the user clicked enter without an entry
-            if symbol == "":
-                # use the default symbol
-                symbol = self.default_symbols[i]
+            name, symbol = self.controller.getUserInfo(i, self.default_symbols, self.symbols)
 
             # saves the used symbol in self.symbols
             self.symbols[i] = symbol
@@ -171,18 +82,10 @@ class App:
             # an AI will be created
             self.create_ai()
 
-    # clears the command line
-    @staticmethod
-    def clear():
-        # depending on the system
-        # execute cls (for windows) or clear (for unix/macOS)
-        os.system('cls' if os.name == 'nt' else 'clear')
-
     # start game
     def start_game(self):
 
         if self.current_player is None:
-
             # current player
             self.current_player = self.first_player
 
@@ -193,7 +96,7 @@ class App:
         while True:
 
             # clears the command line
-            App.clear()
+            self.view.clear()
 
             # shows the game-board
             self.board.show_board()
@@ -205,7 +108,7 @@ class App:
                 # selects the start player for the next round
                 self.current_player = int(self.first_player)
 
-                App.clear()
+                self.view.clear()
                 self.board.show_board()
 
                 # calls self.finish_game()
@@ -218,16 +121,16 @@ class App:
                     # if the user input was n, the loop breaks
                     break
 
-            print("\nFür Speichern und Beenden, 's' eingeben")
+            self.view.print_to_ui("\nFür Speichern und Beenden, 's' eingeben")
 
             # Info for the Player
-            print("\nSpieler {} ist am Zug".format(self.player[int(self.current_player)].name))
+            self.view.print_to_ui("\nSpieler {} ist am Zug".format(self.player[int(self.current_player)].name))
 
             # if an error occur
             if error is not None:
                 # print the error
                 # this has to be made due the clear
-                print(error)
+                self.view.print_to_ui(error)
                 # set error = None so the error disappear in the next round
                 error = None
 
@@ -240,7 +143,7 @@ class App:
             else:
 
                 # current Player writes the move
-                position = input("Zug eingeben (z.B. a1): ").lower()
+                position = self.controller.get_input("Zug eingeben (z.B. a1): ").lower()
 
                 if position == 's':
                     self.save_score()
@@ -269,16 +172,15 @@ class App:
         # if the game-board is full
         if winning_player == -1:
             # print error
-            print("Keine freien Züge mehr... das Spiel ist unentschieden!")
+            self.view.print_to_ui("Keine freien Züge mehr... das Spiel ist unentschieden!")
         else:
             # print congrats
-            print("Spieler {} hat gewonnen!!!".format(self.player[int(winning_player)].name))
+            self.view.print_to_ui("Spieler {} hat gewonnen!!!".format(self.player[int(winning_player)].name))
 
         # clears the game-board
         self.board.clear()
 
         if self.player[0].is_ai or self.player[1].is_ai:
-
             # Sets the strategy for the AI to None
             self.ai.path = None
             self.ai.sub_path = None
@@ -289,7 +191,7 @@ class App:
         # while the user input isn't valid
         while continue_game != 'y' and continue_game != 'n':
             # saves the user input in continue_game
-            continue_game = input("Neue Runde beginnen (y/n)? ").lower()
+            continue_game = self.controller.get_input("Neue Runde beginnen (y/n)? ").lower()
 
         # return the user input
         return continue_game
@@ -297,27 +199,7 @@ class App:
     # Player decided which Player starts the game
     def select_player(self):
 
-        # the ID of the player which begins will be saved in self.first_player
-        self.first_player = 0
-
-        # while the variable isn't 1 or 2
-        while self.first_player != 1 and self.first_player != 2:
-
-            # try because the user could enter a string
-            try:
-
-                # Player input
-                self.first_player = int(input("Welcher Spieler soll anfangen (1: " + self.player[0].name + ", 2: " +
-                                              self.player[1].name + ")? "))
-
-            # if the Player input wasn't an int
-            except ValueError:
-                # pass
-                pass
-
-        # the Player selected 1 or 2
-        # but the Player IDs are 0 or 1
-        self.first_player -= 1
+        self.first_player = self.controller.get_first_player(self.player)
 
     # saves the current score
     def save_score(self):
@@ -378,9 +260,9 @@ class App:
             self.player.append(Player(int(data[i * 4 - 3]), data[i * 4 - 2], data[i * 4] == 'True', data[i * 4 - 1]))
             # if the player is an AI
             if data[i * 4] == 'True':
-                print(data[i * 4 - 2])
+                self.view.print_to_ui(data[i * 4 - 2])
                 # creates an AI object
-                self.ai = Ai(self.board, self.player[-1], int(data[13]), data[(i-1) * 4 - 2])
+                self.ai = Ai(self.board, self.player[-1], int(data[13]), data[(i - 1) * 4 - 2])
                 self.ai.path = int(data[14])
                 self.ai.sub_path = int(data[14])
 
@@ -404,12 +286,14 @@ class App:
     def run(self):
 
         # shows the menu, check if there's a save file and selects the number of players
-        self.showMenu()
+        continue_game = self.controller.showMenu()
+
+        if continue_game:
+            self.load_score()
 
         # if there's a current Player the Player loaded a game from a save file
         # in that case, the board and the Players are already set
         if self.current_player is None:
-
             # creates the game-board
             self.create_board()
 
