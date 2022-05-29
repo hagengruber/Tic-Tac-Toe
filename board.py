@@ -46,8 +46,8 @@ class Board:
     def is_winning(self):
 
         letters = ["a", "b", "c"]
-        CRED = '\033[91m'
-        CEND = '\033[0m'
+        RED = '\033[91m'
+        END = '\033[0m'
 
         # for horizontal lines
         for i in range(1, 4):
@@ -58,9 +58,9 @@ class Board:
                     self.gameBoard["b" + str(i)][1] == self.gameBoard["c" + str(i)][1]:
                 # returns the player number
 
-                self.gameBoard["a" + str(i)][0] = CRED + self.gameBoard["a" + str(i)][0] + CEND
-                self.gameBoard["b" + str(i)][0] = CRED + self.gameBoard["b" + str(i)][0] + CEND
-                self.gameBoard["c" + str(i)][0] = CRED + self.gameBoard["c" + str(i)][0] + CEND
+                self.gameBoard["a" + str(i)][0] = RED + self.gameBoard["a" + str(i)][0] + END
+                self.gameBoard["b" + str(i)][0] = RED + self.gameBoard["b" + str(i)][0] + END
+                self.gameBoard["c" + str(i)][0] = RED + self.gameBoard["c" + str(i)][0] + END
 
                 return str(self.gameBoard["a" + str(i)][1])
 
@@ -72,9 +72,9 @@ class Board:
                     self.gameBoard[i + str(2)][1] and self.gameBoard[i + str(2)][1] == self.gameBoard[i + str(3)][1]:
                 # returns the player number
 
-                self.gameBoard[i + str(1)][0] = CRED + self.gameBoard[i + str(1)][0] + CEND
-                self.gameBoard[i + str(2)][0] = CRED + self.gameBoard[i + str(2)][0] + CEND
-                self.gameBoard[i + str(3)][0] = CRED + self.gameBoard[i + str(3)][0] + CEND
+                self.gameBoard[i + str(1)][0] = RED + self.gameBoard[i + str(1)][0] + END
+                self.gameBoard[i + str(2)][0] = RED + self.gameBoard[i + str(2)][0] + END
+                self.gameBoard[i + str(3)][0] = RED + self.gameBoard[i + str(3)][0] + END
 
                 return str(self.gameBoard[i + str(1)][1])
 
@@ -84,9 +84,9 @@ class Board:
                 self.gameBoard["b2"][1] == self.gameBoard["c3"][1]:
             # returns the player number
 
-            self.gameBoard["a1"][0] = CRED + self.gameBoard["a1"][0] + CEND
-            self.gameBoard["b2"][0] = CRED + self.gameBoard["b2"][0] + CEND
-            self.gameBoard["c3"][0] = CRED + self.gameBoard["c3"][0] + CEND
+            self.gameBoard["a1"][0] = RED + self.gameBoard["a1"][0] + END
+            self.gameBoard["b2"][0] = RED + self.gameBoard["b2"][0] + END
+            self.gameBoard["c3"][0] = RED + self.gameBoard["c3"][0] + END
 
             return str(self.gameBoard["a1"][1])
 
@@ -95,9 +95,9 @@ class Board:
                 self.gameBoard["b2"][1] == self.gameBoard["a3"][1]:
             # returns the player number
 
-            self.gameBoard["c1"][0] = CRED + self.gameBoard["c1"][0] + CEND
-            self.gameBoard["b2"][0] = CRED + self.gameBoard["b2"][0] + CEND
-            self.gameBoard["a3"][0] = CRED + self.gameBoard["a3"][0] + CEND
+            self.gameBoard["c1"][0] = RED + self.gameBoard["c1"][0] + END
+            self.gameBoard["b2"][0] = RED + self.gameBoard["b2"][0] + END
+            self.gameBoard["a3"][0] = RED + self.gameBoard["a3"][0] + END
 
             return str(self.gameBoard["c1"][1])
 
