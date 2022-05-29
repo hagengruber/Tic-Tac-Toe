@@ -2,7 +2,7 @@
 # handles players
 
 # player class
-class player:
+class Player:
 
     # define player
     # self.num has the number of the player (0 or 1)
@@ -14,9 +14,9 @@ class player:
         self.is_ai = is_ai
 
     # the player moved to a field
-    def move(self, gameBoard, position):
+    def move(self, game_board, position):
         # b contains the gameBoard - a dictionary (see board.py -> get_board() for more details)
-        b = gameBoard.get_board()
+        b = game_board.get_board()
 
         # if the move is valid
         if position in b:
@@ -36,9 +36,9 @@ class player:
         else:
             return False
 
-        # if the position is set
+        # if the position is set,
         # set the game-board with set_board
-        gameBoard.set_board(b)
+        game_board.set_board(b)
 
         # if the position is set
         # return true
