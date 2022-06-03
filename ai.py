@@ -1,3 +1,5 @@
+"""Controls behavior of the AI"""
+
 from time import sleep
 from random import randint
 import player
@@ -5,6 +7,7 @@ import player
 
 # ai class
 class Ai:
+    """Controls behavior of the AI"""
 
     # define AI
     def __init__(self, board, play, level, enemy_symbol):
@@ -19,8 +22,11 @@ class Ai:
         self.path = None
         self.sub_path = None
 
-    # check if a user (Player or AI, depends on the Symbol and number) could win with the next move
     def is_winning(self, symbol, num):
+        """
+        check if a user (Player or AI, depends on the Symbol and number)
+        could win with the next move
+        """
 
         # characters for the for-loop
         characters = ["a", "b", "c"]
@@ -28,7 +34,7 @@ class Ai:
         # in current_board the return value of self.board.get_board() will be saved
         current_board = []
         # b is a placeholder for the dictionary from the board
-        b = self.board.get_board()
+        board = self.board.get_board()
 
         # saves the dictionary from b as a list in current_board
         # that's because if the program simply was current_board = self.board.get_board(),
@@ -41,11 +47,11 @@ class Ai:
         # so current_board = self.board.get_board() will not work, because if the
         # AI changes the board in self.board,
         # current_board will also be changed
-        for c in characters:
+        for character in characters:
             for i in range(1, 4):
                 # adds an Entry in the current_board list
                 # list(...) means that the list is no reference but an actual list
-                current_board.append(list(b[c + str(i)]))
+                current_board.append(list(board[character + str(i)]))
 
         # creates a third Player with either the number and symbol of the Player or the AI
         enemy = player.Player(num, symbol, False, "AI")
@@ -54,8 +60,8 @@ class Ai:
         for i in characters:
 
             # check every field in the board
-            for a in range(1, 4):
-                pos = i + str(a)
+            for number in range(1, 4):
+                pos = i + str(number)
                 # if a Player could move in pos
                 if enemy.move(self.board, pos):
 
@@ -78,8 +84,8 @@ class Ai:
         # if no won could win with the next move, return false
         return False
 
-    # move to a random field
     def move_weak(self):
+        """move to a random field"""
 
         characters = ["a", "b", "c"]
 
@@ -88,9 +94,11 @@ class Ai:
             # pass
             pass
 
-    # move the AI
-    # check if the AI or the user could win with the next move
     def move_middle(self):
+        """
+        move the AI
+        check if the AI or the user could win with the next move
+        """
 
         # in ai_winning is either the position of the field in which the AI wins
         # or False if the AI cannot win with the next move
@@ -117,37 +125,37 @@ class Ai:
                 # move to a random field
                 self.move_weak()
 
-    # check if the AI has the first move
     def is_first_move(self):
+        """check if the AI has the first move"""
 
         # iterate through the game board
         characters = ["a", "b", "c"]
         field = self.board.get_board()
 
         for i in characters:
-            for a in range(1, 4):
+            for number in range(1, 4):
                 # if a field is not free, return False
-                if field[i + str(a)][1] is not None:
+                if field[i + str(number)][1] is not None:
                     return False
         # if there are all field free, return true
         return True
 
-    # returns the number of moves the Player and AI made
     def count_moves(self):
+        """returns the number of moves the Player and AI made"""
 
         characters = ["a", "b", "c"]
         count = 0
         field = self.board.get_board()
 
         for i in characters:
-            for a in range(1, 4):
+            for number in range(1, 4):
                 # if the current field is not None, add 1 to count
-                if field[i + str(a)][1] is not None:
+                if field[i + str(number)][1] is not None:
                     count += 1
         return count
 
-    # set the Path for Attack
     def set_path_attack(self):
+        """set the Path for Attack"""
 
         field = self.board.get_board()
 
@@ -155,14 +163,15 @@ class Ai:
             self.path = 2
             return
 
-        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
-                field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] in self.enemy_symbol or field["a3"][0] in self.enemy_symbol or \
+                field["c1"][0] in self.enemy_symbol or field["c3"][0] in self.enemy_symbol:
             self.path = 3
             return
 
         self.path = 1
 
     def move_path_one(self):
+        """Moves in the Path One Pattern"""
 
         counts = self.count_moves()
 
@@ -179,6 +188,7 @@ class Ai:
             self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
 
     def set_move_corner(self):
+        """Sets Moves in a Corner"""
 
         field = self.board.get_board()
         if field["a1"][1] == self.player.num:
@@ -206,6 +216,7 @@ class Ai:
                 self.player.move(self.board, "c1")
 
     def move_path_three(self):
+        """Moves in the Path Three Pattern"""
 
         counts = self.count_moves()
 
@@ -225,6 +236,7 @@ class Ai:
             self.player.move(self.board, self.is_winning(self.player.symbol, self.player.num))
 
     def move_path_two(self):
+        """Moves in the Path Two Pattern"""
 
         counts = self.count_moves()
         field = self.board.get_board()
@@ -244,8 +256,8 @@ class Ai:
 
         elif counts == 4:
             if self.sub_path is None:
-                if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
-                        field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+                if field["a1"][0] in self.enemy_symbol or field["a3"][0] in self.enemy_symbol or \
+                        field["c1"][0] in self.enemy_symbol or field["c3"][0] in self.enemy_symbol:
                     self.sub_path = True
                 else:
                     self.sub_path = False
@@ -260,11 +272,11 @@ class Ai:
                 elif field["c3"][0] == " ":
                     self.player.move(self.board, "c3")
 
-            self.move_middle()
         else:
             self.move_middle()
 
     def attack(self):
+        """AI Attacks"""
 
         if self.is_first_move():
             characters = ["a", "c"]
@@ -283,11 +295,12 @@ class Ai:
             self.move_path_three()
 
     def set_path_defense(self):
+        """Sets Path for defense"""
 
         field = self.board.get_board()
 
-        if field["a1"][0] == self.enemy_symbol or field["a3"][0] == self.enemy_symbol or \
-                field["c1"][0] == self.enemy_symbol or field["c3"][0] == self.enemy_symbol:
+        if field["a1"][0] in self.enemy_symbol or field["a3"][0] in self.enemy_symbol or \
+                field["c1"][0] in self.enemy_symbol or field["c3"][0] in self.enemy_symbol:
             self.path = 1
 
         elif field["b2"][0] == self.enemy_symbol:
@@ -297,6 +310,7 @@ class Ai:
             self.path = 3
 
     def defense_move_path_one(self):
+        """Moves in the Path One Pattern"""
 
         counts = self.count_moves()
 
@@ -307,6 +321,7 @@ class Ai:
             self.move_middle()
 
     def defense_move_path_two(self):
+        """Moves in the Path Two Pattern"""
 
         counts = self.count_moves()
 
@@ -319,6 +334,7 @@ class Ai:
             self.move_middle()
 
     def defense_move_path_three(self):
+        """Moves in the Path Three Pattern"""
 
         counts = self.count_moves()
         field = self.board.get_board()
@@ -367,16 +383,17 @@ class Ai:
                 characters = ["a", "c"]
                 digits = [1, 3]
 
-                for c in characters:
-                    for d in digits:
-                        if field[c + str(d)][0] == " ":
-                            self.player.move(self.board, c + str(d))
+                for character in characters:
+                    for digit in digits:
+                        if field[character + str(digit)][0] == " ":
+                            self.player.move(self.board, character + str(digit))
                             break
 
         else:
             self.move_middle()
 
     def defense(self):
+        """AI goes to defense Mode"""
 
         if self.path is None:
             self.set_path_defense()
@@ -389,6 +406,7 @@ class Ai:
             self.defense_move_path_three()
 
     def move_hard(self):
+        """AI on difficult Level"""
 
         if self.count_moves() % 2 == 0:
             self.attack()
@@ -396,8 +414,8 @@ class Ai:
         else:
             self.defense()
 
-    # move function of AI
     def move(self):
+        """move function of AI"""
 
         print("KI überlegt...")
 

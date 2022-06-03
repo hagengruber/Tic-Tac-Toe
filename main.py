@@ -1,30 +1,33 @@
+"""Handles the main actions"""
+
 # main.py
 # main file -> model
 
 #
 #   @author: Florian Hagengruber: 22101608
 #   enjoy!
+#
 
-from board import Board
-from player import Player
-from ai import Ai
 import os
 from os.path import exists
 import ast
+from board import Board
+from player import Player
+from ai import Ai
 import view
 import controller
 
 
 # app Class
-# start the whole program
 class App:
+    """Handles the main actions"""
 
     # constructor
     def __init__(self):
         # board reference to the board Object - it handles the board
         self.board = None
         # numbers of players in the game
-        self.numberPlayers = None
+        self.number_players = None
         # contains player objects
         self.player = []
         # every player gets different symbols
@@ -32,23 +35,23 @@ class App:
         # there are also default symbols for each Player
         self.default_symbols = ["X", "O"]
         # if the user selects the one-Player mode, in self.ai will be a Player Object for the AI
-        self.ai = None
+        self.artificial_intelligence = None
         # contains the Player who currently moves
         self.current_player = None
         self.first_player = None
         self.view = view.View()
         self.controller = controller.Controller(self.view)
 
-    # create the game-board and clears it
     def create_board(self):
+        """create the game-board and clears it"""
         self.board = Board()
         self.board.clear()
-        self.numberPlayers = self.controller.getNumberPlayer()
+        self.number_players = self.controller.get_number_player()
 
-    # an AI will be created
     def create_ai(self):
+        """an AI will be created"""
 
-        level = self.controller.getLevelAI()
+        level = self.controller.get_level_ai()
 
         # if the user use the Symbol O
         if self.symbols[0] == self.default_symbols[1]:
@@ -61,14 +64,14 @@ class App:
         # creates a new entry in the list self.player
         # saves in that entry a new player object
         self.player.append(Player(1, self.symbols[1], True, "KI"))
-        self.ai = Ai(self.board, self.player[-1], level, self.symbols[0])
+        self.artificial_intelligence = Ai(self.board, self.player[-1], level, self.symbols[0])
 
-    # create as much player as in the self.numberPlayers and saves it in a list
     def create_player(self):
+        """create as much player as in the self.numberPlayers and saves it in a list"""
 
-        for i in range(self.numberPlayers):
+        for i in range(self.number_players):
 
-            name, symbol = self.controller.getUserInfo(i, self.default_symbols, self.symbols)
+            name, symbol = self.controller.get_user_info(i, self.default_symbols, self.symbols)
 
             # saves the used symbol in self.symbols
             self.symbols[i] = symbol
@@ -78,12 +81,12 @@ class App:
             self.player.append(Player(i, symbol, False, name))
 
         # if the player selected the single player mode
-        if self.numberPlayers == 1:
+        if self.number_players == 1:
             # an AI will be created
             self.create_ai()
 
-    # start game
     def start_game(self):
+        """starts game"""
 
         if self.current_player is None:
             # current player
@@ -117,14 +120,15 @@ class App:
                 if self.finish_game() == 'y':
                     # if the user input was y, the loop will continue
                     continue
-                else:
-                    # if the user input was n, the loop breaks
-                    break
+
+                # if the user input was n, the loop breaks
+                break
 
             self.view.print_to_ui("\nFür Speichern und Beenden, 's' eingeben")
 
             # Info for the Player
-            self.view.print_to_ui("\nSpieler {} ist am Zug".format(self.player[int(self.current_player)].name))
+            self.view.print_to_ui("\nSpieler {} ist am Zug"
+                                  .format(self.player[int(self.current_player)].name))
 
             # if an error occur
             if error is not None:
@@ -137,7 +141,7 @@ class App:
             # if the current Player is an AI
             if self.player[int(self.current_player)].is_ai:
                 # AI should move
-                self.ai.move()
+                self.artificial_intelligence.move()
 
             # if the current Player is not an AI
             else:
@@ -163,8 +167,8 @@ class App:
             if self.current_player == len(self.player):
                 self.current_player = 0
 
-    # clears the game-board and asks if the player want to continue the game
     def finish_game(self):
+        """clears the game-board and asks if the player want to continue the game"""
         # winning_player contains either the number of the player who won
         # or -1 -> means the game-board is full
         winning_player = self.board.is_winning()
@@ -175,118 +179,120 @@ class App:
             self.view.print_to_ui("Keine freien Züge mehr... das Spiel ist unentschieden!")
         else:
             # print congrats
-            self.view.print_to_ui("Spieler {} hat gewonnen!!!".format(self.player[int(winning_player)].name))
+            self.view.print_to_ui("Spieler {} hat gewonnen!!!"
+                                  .format(self.player[int(winning_player)].name))
 
         # clears the game-board
         self.board.clear()
 
         if self.player[0].is_ai or self.player[1].is_ai:
             # Sets the strategy for the AI to None
-            self.ai.path = None
-            self.ai.sub_path = None
+            self.artificial_intelligence.path = None
+            self.artificial_intelligence.sub_path = None
 
         # the user input is in continue_game
         continue_game = None
+        accept_game = ['y', 'n']
 
         # while the user input isn't valid
-        while continue_game != 'y' and continue_game != 'n':
+        while continue_game not in accept_game:
             # saves the user input in continue_game
             continue_game = self.controller.get_input("Neue Runde beginnen (y/n)? ").lower()
 
         # return the user input
         return continue_game
 
-    # Player decided which Player starts the game
     def select_player(self):
-
+        """Player decided which Player starts the game"""
         self.first_player = self.controller.get_first_player(self.player)
 
-    # saves the current score
     def save_score(self):
+        """saves the current score"""
 
         # if a save file exists, remove it
         if exists("saves.dat"):
             os.remove("saves.dat")
 
         # open a new save file, called saves.dat
-        f = open("saves.dat", "a")
+        with open('saves.dat', 'a', encoding='UTF-8') as file:
 
-        # for every entry in the list self.player
-        for i in self.player:
-            # saves the number, the symbol and the name of every Player and if it's an AI
-            f.write("(" + str(i.num))
-            f.write("(" + str(i.symbol))
-            f.write("(" + str(i.name))
-            f.write("(" + str(i.is_ai))
+            # for every entry in the list self.player
+            for i in self.player:
+                # saves the number, the symbol and the name of every Player and if it's an AI
+                file.write("(" + str(i.num))
+                file.write("(" + str(i.symbol))
+                file.write("(" + str(i.name))
+                file.write("(" + str(i.is_ai))
 
-        # saves the game-board
-        f.write("(" + str(self.board.get_board()))
-        # saves the current Player (0 or 1)
-        f.write("(" + str(self.current_player))
-        # saves the first player (if the player finish a round and want to play another)
-        f.write("(" + str(self.first_player))
-        # saves the symbols
-        f.write("(" + str(self.symbols))
+            # saves the game-board
+            file.write("(" + str(self.board.get_board()))
+            # saves the current Player (0 or 1)
+            file.write("(" + str(self.current_player))
+            # saves the first player (if the player finish a round and want to play another)
+            file.write("(" + str(self.first_player))
+            # saves the symbols
+            file.write("(" + str(self.symbols))
 
-        # if the player chose to play with an AI
-        if self.ai is not None:
-            # saves the level of the AI
-            f.write("(" + str(self.ai.level))
-            f.write("(" + str(self.ai.path))
-            f.write("(" + str(self.ai.sub_path))
+            # if the player chose to play with an AI
+            if self.artificial_intelligence is not None:
+                # saves the level of the AI
+                file.write("(" + str(self.artificial_intelligence.level))
+                file.write("(" + str(self.artificial_intelligence.path))
+                file.write("(" + str(self.artificial_intelligence.sub_path))
 
-        # close the file
-        f.close()
-
-    # loads the score
     def load_score(self):
+        """loads the score"""
 
         # opens the save file
-        f = open("saves.dat", "r")
-        # creates a list
-        # separates the string by every (
-        data = f.read().split('(')
+        with open('saves.dat', 'r', encoding='UTF-8') as file:
 
-        # create a board
-        self.board = Board()
-        # set the board
-        # the ast.literal_eval creates a dictionary instead of a string
-        self.board.set_board(ast.literal_eval(data[9].replace("'", '"')))
+            # creates a list
+            # separates the string by every (
+            data = file.read().split('(')
 
-        # creates the player
-        for i in range(1, 3):
-            # append an entry in the self.player list
+            # create a board
+            self.board = Board()
+            # set the board
+            # the ast.literal_eval creates a dictionary instead of a string
+            self.board.set_board(ast.literal_eval(data[9].replace("'", '"')))
 
-            self.player.append(Player(int(data[i * 4 - 3]), data[i * 4 - 2], data[i * 4] == 'True', data[i * 4 - 1]))
-            # if the player is an AI
-            if data[i * 4] == 'True':
-                self.view.print_to_ui(data[i * 4 - 2])
-                # creates an AI object
-                self.ai = Ai(self.board, self.player[-1], int(data[13]), data[(i - 1) * 4 - 2])
-                self.ai.path = int(data[14])
-                self.ai.sub_path = int(data[14])
+            # creates the player
+            for i in range(1, 3):
+                # append an entry in the self.player list
 
-        # set the first player (if the player finish a round and want to play another)
-        self.first_player = data[11]
+                self.player.append(Player(int(data[i * 4 - 3]),
+                                          data[i * 4 - 2], data[i * 4] == 'True',
+                                          data[i * 4 - 1]))
+                # if the player is an AI
+                if data[i * 4] == 'True':
+                    self.view.print_to_ui(data[i * 4 - 2])
+                    # creates an AI object
+                    self.artificial_intelligence = Ai(self.board, self.player[-1],
+                                                      int(data[13]), data[(i - 1) * 4 - 2])
+                    self.artificial_intelligence.path = int(data[14])
+                    self.artificial_intelligence.sub_path = int(data[14])
 
-        # set the symbols
-        # ast.literal_eva creates a list instead of a string
-        self.symbols = ast.literal_eval(data[12])
+            # set the first player (if the player finish a round and want to play another)
+            self.first_player = data[11]
 
-        # set the current player
-        self.current_player = int(data[10])
+            # set the symbols
+            # ast.literal_eva creates a list instead of a string
+            self.symbols = ast.literal_eval(data[12])
 
-        # close the save file
-        f.close()
+            # set the current player
+            self.current_player = int(data[10])
+
         # remove the save file
         os.remove("saves.dat")
 
-    # run-function
-    # start the program
     def run(self):
+        """
+        run-function
+        start the program
+        """
 
         # shows the menu, check if there's a save file and selects the number of players
-        continue_game = self.controller.showMenu()
+        continue_game = self.controller.show_menu()
 
         if continue_game:
             self.load_score()
