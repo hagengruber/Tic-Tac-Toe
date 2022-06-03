@@ -34,9 +34,12 @@ class Ai:
         # that's because if the program simply was current_board = self.board.get_board(),
         # current_board were just a reference to the dictionary of board
         # the AI changes moves in the current board to predict the best move
-        # current_board is therefore a save for the current board and the current board will be set to the state of
+        # current_board is therefore a save
+        # for the current board and
+        # the current board will be set to the state of
         # current_board
-        # so current_board = self.board.get_board() will not work, because if the AI changes the board in self.board,
+        # so current_board = self.board.get_board() will not work, because if the
+        # AI changes the board in self.board,
         # current_board will also be changed
         for c in characters:
             for i in range(1, 4):
@@ -60,9 +63,11 @@ class Ai:
 
                     # sets the board to the "default" state, which is saved in current_board
                     self.board.set_board(
-                        {"a1": list(current_board[0]), "a2": list(current_board[1]), "a3": list(current_board[2]),
-                         "b1": list(current_board[3]), "b2": list(current_board[4]), "b3": list(current_board[5]),
-                         "c1": list(current_board[6]), "c2": list(current_board[7]), "c3": list(current_board[8])})
+                        {"a1": list(current_board[0]), "a2": list(current_board[1]),
+                         "a3": list(current_board[2]), "b1": list(current_board[3]),
+                         "b2": list(current_board[4]), "b3": list(current_board[5]),
+                         "c1": list(current_board[6]), "c2": list(current_board[7]),
+                         "c3": list(current_board[8])})
 
                     # if the player would win with this move
                     if win:
@@ -323,7 +328,8 @@ class Ai:
 
         elif counts == 3:
             if not (field["a2"][0] == self.enemy_symbol and field["c2"][0] == self.enemy_symbol):
-                if not (field["b1"][0] == self.enemy_symbol and field["b3"][0] == self.enemy_symbol):
+                if not (field["b1"][0] == self.enemy_symbol
+                        and field["b3"][0] == self.enemy_symbol):
 
                     if field["b1"][0] == self.enemy_symbol:
                         if not self.player.move(self.board, "a1"):
