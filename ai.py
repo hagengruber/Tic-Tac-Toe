@@ -430,4 +430,4 @@ class Ai:
             self.move_hard()
 
         # sleep because the Player should see "KI überlegt..."
-        sleep(2)
+        # sleep(2)
