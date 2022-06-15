@@ -3,7 +3,6 @@ import pytest
 from ai import Ai
 from player import Player
 from board import Board
-from io import StringIO
 import copy
 
 

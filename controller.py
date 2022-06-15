@@ -1,6 +1,6 @@
 """Checks Input from User and handles simple actions"""
 
-from os.path import exists
+import os
 
 
 class Controller:
@@ -15,7 +15,7 @@ class Controller:
         self.view.print_to_ui("Willkommen zu Tic-Tac-Toe")
 
         # if there's a save file
-        if exists("saves.dat"):
+        if os.path.exists("saves.dat"):
 
             # user input will be saved in save_game
             save_game = str(0)
