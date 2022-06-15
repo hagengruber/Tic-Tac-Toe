@@ -1,5 +1,7 @@
 """Handles the board"""
 
+from view import View
+
 
 # board.py
 
@@ -10,6 +12,7 @@ class Board:
     # a dictionary which contains all moves of the players
     def __init__(self):
         self.game_board = {}
+        self.view = View()
 
     def clear(self):
         """set the game-board to default"""
@@ -34,21 +37,22 @@ class Board:
         # prints on every position the related symbol in self.gameBoard
         # either X or O if a Player moved to this position
         # of " " if none of the players have moved to this
-        print(" \n"
-              "  {}  |  {}  |  {}     3\n"
-              "-----|-----|-----\n"
-              "  {}  |  {}  |  {}     2\n"
-              "-----|-----|-----\n"
-              "  {}  |  {}  |  {}     1\n\n"
-              "  a     b     c".format(self.game_board["a3"][0],
-                                       self.game_board["b3"][0],
-                                       self.game_board["c3"][0],
-                                       self.game_board["a2"][0],
-                                       self.game_board["b2"][0],
-                                       self.game_board["c2"][0],
-                                       self.game_board["a1"][0],
-                                       self.game_board["b1"][0],
-                                       self.game_board["c1"][0]))
+        output = " \n" \
+                 "  {}  |  {}  |  {}     3\n" \
+                 "-----|-----|-----\n" \
+                 "  {}  |  {}  |  {}     2\n" \
+                 "-----|-----|-----\n" \
+                 "  {}  |  {}  |  {}     1\n\n" \
+                 "  a     b     c".format(self.game_board["a3"][0],
+                                          self.game_board["b3"][0],
+                                          self.game_board["c3"][0],
+                                          self.game_board["a2"][0],
+                                          self.game_board["b2"][0],
+                                          self.game_board["c2"][0],
+                                          self.game_board["a1"][0],
+                                          self.game_board["b1"][0],
+                                          self.game_board["c1"][0])
+        return output
 
     def is_winning(self):
         """check if a player wins"""

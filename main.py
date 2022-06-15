@@ -102,7 +102,7 @@ class App:
             self.view.clear()
 
             # shows the game-board
-            self.board.show_board()
+            self.view.print_to_ui(self.board.show_board())
 
             # check if one of the user wins
             # if the function returns -1, the game-board is full
@@ -112,7 +112,7 @@ class App:
                 self.current_player = int(self.first_player)
 
                 self.view.clear()
-                self.board.show_board()
+                self.view.print_to_ui(self.board.show_board())
 
                 # calls self.finish_game()
                 # the function prints the winner and asks the player
