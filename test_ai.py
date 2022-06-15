@@ -58,7 +58,7 @@ def test_move_middle(monkeypatch, create_player, create_board):
     assert board.get_board()["c1"][1] is not None
 
 
-def test_move_hard(monkeypatch, create_player, create_board):
+def test_move_hard_defense(monkeypatch, create_player, create_board):
     board = create_board
 
     # Defense 1
@@ -117,18 +117,128 @@ def test_move_hard(monkeypatch, create_player, create_board):
            board.get_board()["a3"][1] is not None or board.get_board()["c1"][1] is not None or \
            board.get_board()["c2"][1] is not None or board.get_board()["c3"][1] is not None
 
-    # Attack
+
+def test_move_hard_attack(monkeypatch, create_player, create_board):
+    board = create_board
+    player_ai = create_player
+    ai = Ai(board, player_ai, 3, 'X')
+
+    # Attack first Move
     ai.path = None
     new_board = {
-        'a1': ['X', 0],
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["a1"][1] is not None or board.get_board()["a2"][1] is not None or \
+           board.get_board()["a3"][1] is not None or board.get_board()["c1"][1] is not None or \
+           board.get_board()["c2"][1] is not None or board.get_board()["c3"][1] is not None
+
+    # Attack 1
+    ai.path = None
+    new_board = {
+        'a1': [' ', None],
         'b1': ['X', 0],
         'c1': [' ', None],
         'a2': [' ', None],
-        'b2': ['O', 1],
+        'b2': [' ', None],
         'c2': [' ', None],
-        'a3': ['X', 1],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["a3"][1] is not None
+
+    # Attack 1 second Path
+    ai.path = None
+    new_board = {
+        'a1': [' ', None],
+        'b1': ['X', 0],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': ['O', 1],
+        'b3': ['X', 0],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["b2"][1] is not None
+
+    # Attack 2
+    ai.path = None
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': ['X', 0],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["a1"][1] is not None
+
+    # Attack 2 path 2
+    ai.path = None
+    new_board = {
+        'a1': ['O', 1],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': ['X', 0],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': ['X', 0],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["b1"][1] is not None
+
+    # Attack 3
+    ai.path = None
+    new_board = {
+        'a1': ['X', 0],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': ['O', 1],
         'b3': [' ', None],
         'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.move()
+    assert board.get_board()["c3"][1] is not None
+
+    # Attack 3 path 2
+    ai.path = None
+    new_board = {
+        'a1': ['X', 0],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': ['O', 1],
+        'b3': ['X', 0],
+        'c3': ['O', 1]
     }
     board.set_board(new_board)
     ai.move()

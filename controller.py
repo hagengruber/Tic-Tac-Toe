@@ -47,8 +47,6 @@ class Controller:
                 # 2 Player: doesn't need the KI
                 number_player = int(self.view.get_input("Wie viele Spieler (1-2)? "))
 
-                print("Number: " + str(number_player))
-
                 # if the player doesn't write a valuable number - show error
                 if number_player not in accept_player:
                     self.view.print_to_ui("Ungültige Eingabe")

@@ -261,6 +261,7 @@ class Ai:
                     self.sub_path = True
                 else:
                     self.sub_path = False
+                    self.move_middle()
 
             if self.sub_path:
                 if field["a1"][0] == " ":
@@ -417,7 +418,7 @@ class Ai:
     def move(self):
         """move function of AI"""
 
-        print("KI überlegt...")
+        # print("KI überlegt...")
 
         # if the level of the AI is 1 -> weak AI
         if self.level == 1:
