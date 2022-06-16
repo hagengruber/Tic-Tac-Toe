@@ -9,7 +9,6 @@
 #
 
 import os
-from os.path import exists
 import ast
 from board import Board
 from player import Player
@@ -210,7 +209,7 @@ class App:
         """saves the current score"""
 
         # if a save file exists, remove it
-        if exists("saves.dat"):
+        if os.path.exists("saves.dat"):
             os.remove("saves.dat")
 
         # open a new save file, called saves.dat
