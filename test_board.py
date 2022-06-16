@@ -106,7 +106,6 @@ def test_is_winning():
     assert board.is_winning() == '0'
 
     board.clear()
-
     new_board = {
         'a1': ['X', 0],
         'b1': ['O', 1],
