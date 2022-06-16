@@ -1,6 +1,5 @@
 """Controls behavior of the AI"""
 
-from time import sleep
 from random import randint
 import player
 
@@ -89,10 +88,11 @@ class Ai:
 
         characters = ["a", "b", "c"]
 
+        move = False
+
         # while the current move is invalid
-        while not self.player.move(self.board, characters[randint(0, 2)] + str(randint(1, 3))):
-            # pass
-            pass
+        while not move:
+            move = self.player.move(self.board, characters[randint(0, 2)] + str(randint(1, 3)))
 
     def move_middle(self):
         """
@@ -192,7 +192,7 @@ class Ai:
 
         field = self.board.get_board()
         if field["a1"][1] == self.player.num:
-            if field["b1"][0] == " " and field["c1"][0] == "":
+            if field["b1"][0] == " " and field["c1"][0] == " ":
                 self.player.move(self.board, "c1")
             else:
                 self.player.move(self.board, "a3")

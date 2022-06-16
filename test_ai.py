@@ -240,8 +240,9 @@ def test_defense_three(mocker, create_player, create_board):
     ai.move()
 
     assert board.get_board()["a3"][1] is not None
-    mocker.patch('ai.Ai.count_moves', return_value=7)
+
     # Path 6
+    mocker.patch('ai.Ai.count_moves', return_value=7)
 
     ai.path = None
     new_board = {
@@ -619,3 +620,130 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     mocker.patch('ai.Ai.is_winning', return_value="c3")
     ai.move()
     assert board.get_board()["c3"][1] is not None
+
+
+def test_set_move_corner(mocker, create_player):
+    board = Board()
+    board.clear()
+    player_ai = create_player
+    ai = Ai(board, player_ai, 3, 'X')
+
+    new_board = {
+        'a1': ['O', 1],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["c1"] is not None
+
+    new_board = {
+        'a1': ['O', 1],
+        'b1': ['O', 1],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["a3"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': ['O', 1],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["c3"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': ['O', 1],
+        'b3': ['O', 1],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["a1"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': ['O', 1],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["a1"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': ['O', 1],
+        'c1': ['O', 1],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': [' ', None]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["c3"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': [' ', None],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["a3"] is not None
+
+    new_board = {
+        'a1': [' ', None],
+        'b1': [' ', None],
+        'c1': [' ', None],
+        'a2': [' ', None],
+        'b2': [' ', None],
+        'c2': [' ', None],
+        'a3': [' ', None],
+        'b3': ['O', 1],
+        'c3': ['O', 1]
+    }
+    board.set_board(new_board)
+    ai.set_move_corner()
+    assert board.get_board()["c1"] is not None

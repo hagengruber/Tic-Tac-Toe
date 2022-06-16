@@ -78,6 +78,10 @@ def test_start_game(create_game, create_board, mocker):
     app.error = "Test"
     app.start_game()
 
+    mocker.patch('board.Board.is_winning', return_value=-1)
+    mocker.patch('main.App.finish_game', side_effect=['y', 'n'])
+    app.start_game()
+
 
 def test_finish_game(create_game, create_board, mocker):
     app = create_game
@@ -110,7 +114,6 @@ def test_select_player(mocker, create_game):
 
 
 def test_save_score(mocker, create_game, create_board):
-
     if os.path.exists("saves.dat"):
         os.remove("saves.dat")
 
@@ -155,3 +158,5 @@ def test_run(mocker, create_game):
     mocker.patch('main.App.create_player', return_value="")
     mocker.patch('main.App.select_player', return_value="")
     mocker.patch('main.App.start_game', return_value="")
+
+    app.run()
