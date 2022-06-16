@@ -2,6 +2,7 @@
 
 from random import randint
 import player
+from time import sleep
 
 
 # ai class
@@ -418,7 +419,7 @@ class Ai:
     def move(self):
         """move function of AI"""
 
-        # print("KI überlegt...")
+        print("KI überlegt...")
 
         # if the level of the AI is 1 -> weak AI
         if self.level == 1:
@@ -431,4 +432,4 @@ class Ai:
             self.move_hard()
 
         # sleep because the Player should see "KI überlegt..."
-        # sleep(2)
+        sleep(2)
