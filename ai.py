@@ -192,25 +192,25 @@ class Ai:
 
         field = self.board.get_board()
         if field["a1"][1] == self.player.num:
-            if field["b1"][0] == " ":
+            if field["b1"][0] == " " and field["c1"][0] == "":
                 self.player.move(self.board, "c1")
             else:
                 self.player.move(self.board, "a3")
 
         elif field["a3"][1] == self.player.num:
-            if field["b3"][0] == " ":
+            if field["b3"][0] == " " and field["c3"][0] == " ":
                 self.player.move(self.board, "c3")
             else:
                 self.player.move(self.board, "a1")
 
         elif field["c1"][1] == self.player.num:
-            if field["b1"][0] == " ":
+            if field["b1"][0] == " " and field["a1"][0] == " ":
                 self.player.move(self.board, "a1")
             else:
                 self.player.move(self.board, "c3")
 
         elif field["c3"][1] == self.player.num:
-            if field["b3"][0] == " ":
+            if field["b3"][0] == " " and field["a3"][0] == " ":
                 self.player.move(self.board, "a3")
             else:
                 self.player.move(self.board, "c1")

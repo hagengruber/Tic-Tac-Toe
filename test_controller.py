@@ -31,11 +31,17 @@ def test_get_number_player(mocker, create_controller):
     mocker.patch('view.View.get_input', return_value=2)
     assert controller.get_number_player() == 2
 
+    mocker.patch('view.View.get_input', side_effect=['a', '3', '1'])
+    assert controller.get_number_player() == 1
+
 
 def test_get_level_ai(mocker, create_controller):
     controller = create_controller
     mocker.patch('view.View.get_input', return_value=3)
     assert controller.get_level_ai() == 3
+
+    mocker.patch('view.View.get_input', side_effect=['a', '4', '1'])
+    assert controller.get_level_ai() == 1
 
 
 def test_get_user_info(mocker, create_controller):
@@ -44,10 +50,14 @@ def test_get_user_info(mocker, create_controller):
     name, symbol = controller.get_user_info(0, ["X", "O"], [])
     assert name == '1' and symbol == "1"
 
+    mocker.patch('view.View.get_input', side_effect=['', 'X', 'X', 'XX', ' ', ''])
+    name, symbol = controller.get_user_info(1, ["X", "O"], ["X"])
+    assert name == 'X' and symbol == 'O'
+
 
 def test_get_fist_player(mocker, create_controller, create_player):
     controller = create_controller
-    mocker.patch('view.View.get_input', return_value=1)
+    mocker.patch('view.View.get_input', side_effect=['a', '1'])
     assert controller.get_first_player([create_player, create_player]) == 0
 
 

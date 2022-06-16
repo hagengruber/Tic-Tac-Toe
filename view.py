@@ -6,9 +6,6 @@ import os
 class View:
     """Handles interaction with User"""
 
-    def __int__(self):
-        pass
-
     @staticmethod
     def print_to_ui(text):
         """Prints text to UI"""
