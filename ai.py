@@ -1,8 +1,8 @@
 """Controls behavior of the AI"""
 
 from random import randint
-import player
 from time import sleep
+import player
 
 
 # ai class

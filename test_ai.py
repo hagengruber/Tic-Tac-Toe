@@ -1,13 +1,15 @@
-import pytest
+"""Tests the AI"""
 
+import copy
+import pytest
 from ai import Ai
 from player import Player
 from board import Board
-import copy
 
 
 @pytest.fixture
 def create_board():
+    """Creates Board"""
     board = Board()
     new_board = {
         'a1': ['X', 0],
@@ -26,10 +28,12 @@ def create_board():
 
 @pytest.fixture
 def create_player():
+    """Creates Player"""
     return Player(1, 'O', True, 'KI')
 
 
-def test_is_winning(monkeypatch, create_player, create_board):
+def test_is_winning(create_player, create_board):
+    """Tests the function is_winning"""
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -40,7 +44,8 @@ def test_is_winning(monkeypatch, create_player, create_board):
     assert ai.is_winning('X', 0) is False
 
 
-def test_move_weak(monkeypatch, create_player, create_board):
+def test_move_weak(create_player, create_board):
+    """Tests the function move_weak"""
     board = create_board
     t1_board = copy.deepcopy(board.get_board())
 
@@ -52,6 +57,7 @@ def test_move_weak(monkeypatch, create_player, create_board):
 
 
 def test_move_middle(mocker, create_player, create_board):
+    """Tests the function move_middle"""
     board = create_board
 
     player_ai = create_player
@@ -69,6 +75,7 @@ def test_move_middle(mocker, create_player, create_board):
 
 
 def test_move_hard_defense(mocker, create_player, create_board):
+    """Tests the function move_hard in defense mode"""
     board = create_board
 
     # Defense 1
@@ -96,6 +103,7 @@ def test_move_hard_defense(mocker, create_player, create_board):
 
 
 def test_defense_two(mocker, create_player, create_board):
+    """Tests the function move_hard in defense mode on Path 2"""
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -125,8 +133,7 @@ def test_defense_two(mocker, create_player, create_board):
 
 
 def test_defense_three(mocker, create_player, create_board):
-
-    """Defense 3"""
+    """Tests the function move_hard in defense mode on Path 3"""
 
     board = create_board
     player_ai = create_player
@@ -231,7 +238,8 @@ def test_defense_three(mocker, create_player, create_board):
     assert board.get_board()["a3"][1] is not None
 
     board.clear()
-    mocker.patch('ai.Ai.is_winning', side_effect=["a3", False, False, "a3", "a3", False, "a3", False, False])
+    mocker.patch('ai.Ai.is_winning', side_effect=["a3", False, False, "a3", "a3", False,
+                                                  "a3", False, False])
     ai.move()
 
     assert board.get_board()["a3"][1] is not None
@@ -269,6 +277,7 @@ def test_defense_three(mocker, create_player, create_board):
 
 
 def test_move_hard_attack(mocker, create_player, create_board):
+    """Tests the function move_hard in attack mode on Path 1"""
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -378,7 +387,8 @@ def test_move_hard_attack(mocker, create_player, create_board):
 
 
 def test_move_hard_attack_path_two(create_player, create_board):
-    # Attack 2
+    """Tests the function move_hard in attack mode on Path 2"""
+
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -545,7 +555,8 @@ def test_move_hard_attack_path_two(create_player, create_board):
 
 
 def test_move_hard_attack_path_three(mocker, create_player, create_board):
-    # Attack 3
+    """Tests the function move_hard in attack mode on Path 3"""
+
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -622,7 +633,8 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     assert board.get_board()["c3"][1] is not None
 
 
-def test_set_move_corner(mocker, create_player):
+def test_set_move_corner(create_player):
+    """Tests the function set_move_corner"""
     board = Board()
     board.clear()
     player_ai = create_player

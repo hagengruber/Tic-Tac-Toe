@@ -1,24 +1,30 @@
+"""Tests the Main Class"""
+
+import os
 import pytest
 from main import App
 from board import Board
 from player import Player
 from ai import Ai
-import os
 
 
 @pytest.fixture
 def create_game():
+    """Creates Game"""
     return App()
 
 
 @pytest.fixture
 def create_board():
+    """Crates Board"""
     board = Board()
     board.clear()
     return board
 
 
 def test_create_board(create_game, mocker):
+    """Tests the function create_board"""
+
     app = create_game
     mocker.patch('controller.Controller.get_number_player', return_value=1)
     app.create_board()
@@ -26,6 +32,8 @@ def test_create_board(create_game, mocker):
 
 
 def test_create_ai(create_game, mocker):
+    """Tests the function create_ai"""
+
     app = create_game
     mocker.patch('controller.Controller.get_level_ai', return_value=3)
     app.symbols[0] = "X"
@@ -42,6 +50,8 @@ def test_create_ai(create_game, mocker):
 
 
 def test_create_player(create_game, mocker):
+    """Tests the function create_player"""
+
     app = create_game
     app.number_players = 1
     app.default_symbols = ["X", "O"]
@@ -53,6 +63,8 @@ def test_create_player(create_game, mocker):
 
 
 def test_start_game(create_game, create_board, mocker):
+    """Tests the function start_game"""
+
     app = create_game
     app.board = create_board
     app.first_player = 0
@@ -84,6 +96,8 @@ def test_start_game(create_game, create_board, mocker):
 
 
 def test_finish_game(create_game, create_board, mocker):
+    """Tests the function finish_game"""
+
     app = create_game
     board = create_board
     app.player = [Player(0, "X", True, "Player1"), Player(1, "O", True, "Player2")]
@@ -104,6 +118,8 @@ def test_finish_game(create_game, create_board, mocker):
 
 
 def test_select_player(mocker, create_game):
+    """Tests the function select_player"""
+
     app = create_game
 
     mocker.patch('controller.Controller.get_first_player', return_value=0)
@@ -114,6 +130,8 @@ def test_select_player(mocker, create_game):
 
 
 def test_save_score(mocker, create_game, create_board):
+    """Tests the function save_score"""
+
     if os.path.exists("saves.dat"):
         os.remove("saves.dat")
 
@@ -138,17 +156,21 @@ def test_save_score(mocker, create_game, create_board):
 
 
 def test_load_score(mocker, create_game, create_board):
+    """Tests the function load_score"""
+
     test_save_score(mocker, create_game, create_board)
 
     app = App()
 
     app.load_score()
 
-    assert app.board is not None and len(app.player) == 2 and len(app.symbols) == 2 and app.current_player == 0 \
-           and app.artificial_intelligence is not None
+    assert app.board is not None and len(app.player) == 2 and len(app.symbols) == 2 and \
+           app.current_player == 0 and app.artificial_intelligence is not None
 
 
 def test_run(mocker, create_game):
+    """Tests the function run"""
+
     app = create_game
     app.current_player = None
 

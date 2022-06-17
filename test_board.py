@@ -1,17 +1,20 @@
-import pytest
+"""Tests the Board"""
 
-from board import Board
 from copy import deepcopy
+import pytest
+from board import Board
 
 
 @pytest.fixture
 def create_board():
+    """Creates Board"""
     board = Board()
     board.clear()
     return board
 
 
 def test_clear(create_board):
+    """Tests the function clear"""
     board = create_board
     test_board = deepcopy(board.get_board())
     new_board = {"a1": 0}
@@ -21,6 +24,7 @@ def test_clear(create_board):
 
 
 def test_show_board(create_board):
+    """Tests the function show_board"""
     board = create_board
     com_output = board.show_board()
     new_board = {
@@ -40,6 +44,7 @@ def test_show_board(create_board):
 
 
 def test_is_winning():
+    """Tests the function is_winning"""
     board = Board()
     board.clear()
 
