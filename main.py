@@ -312,7 +312,7 @@ class App:
         self.start_game()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # start the program
     app = App()
     app.run()
