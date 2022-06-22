@@ -109,12 +109,12 @@ def test_finish_game(create_game, create_board, mocker):
 
     app.finish_game()
 
-    assert app.artificial_intelligence.path is None and app.artificial_intelligence.sub_path is None
+    assert app.artificial_intelligence.path == 0 and app.artificial_intelligence.sub_path == 0
 
     mocker.patch('board.Board.is_winning', return_value=1)
     app.finish_game()
 
-    assert app.artificial_intelligence.path is None and app.artificial_intelligence.sub_path is None
+    assert app.artificial_intelligence.path == 0 and app.artificial_intelligence.sub_path == 0
 
 
 def test_select_player(mocker, create_game):

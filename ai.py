@@ -1,7 +1,7 @@
 """Controls behavior of the AI"""
 
 from random import randint
-from time import sleep
+import time
 import player
 
 
@@ -19,8 +19,8 @@ class Ai:
         self.level = int(level)
         # the symbol of the enemy
         self.enemy_symbol = enemy_symbol
-        self.path = None
-        self.sub_path = None
+        self.path = 0
+        self.sub_path = 0
 
     def is_winning(self, symbol, num):
         """
@@ -256,7 +256,7 @@ class Ai:
                 self.player.move(self.board, "a1")
 
         elif counts == 4:
-            if self.sub_path is None:
+            if self.sub_path == 0:
                 if field["a1"][0] in self.enemy_symbol or field["a3"][0] in self.enemy_symbol or \
                         field["c1"][0] in self.enemy_symbol or field["c3"][0] in self.enemy_symbol:
                     self.sub_path = True
@@ -286,7 +286,7 @@ class Ai:
             self.player.move(self.board, characters[randint(0, 1)] + str(digits[randint(0, 1)]))
             return
 
-        if self.path is None:
+        if self.path == 0:
             self.set_path_attack()
 
         if self.path == 1:
@@ -397,7 +397,7 @@ class Ai:
     def defense(self):
         """AI goes to defense Mode"""
 
-        if self.path is None:
+        if self.path == 0:
             self.set_path_defense()
 
         if self.path == 1:
@@ -432,4 +432,4 @@ class Ai:
             self.move_hard()
 
         # sleep because the Player should see "KI überlegt..."
-        sleep(2)
+        time.sleep(2)

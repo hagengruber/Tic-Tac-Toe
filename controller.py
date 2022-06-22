@@ -103,7 +103,7 @@ class Controller:
 
         # Player writes a single character for the symbol
         symbol = self.view.get_input("Geben Sie ein Symbol "
-                                     "für " + name + " ein (standard "
+                                     "für " + name + " ein (Standard "
                                                      "ist " + default_symbols[i] + "): ")
 
         # while the symbol is already used or if the user input is more than one character

@@ -186,8 +186,8 @@ class App:
 
         if self.player[0].is_ai or self.player[1].is_ai:
             # Sets the strategy for the AI to None
-            self.artificial_intelligence.path = None
-            self.artificial_intelligence.sub_path = None
+            self.artificial_intelligence.path = 0
+            self.artificial_intelligence.sub_path = 0
 
         # the user input is in continue_game
         continue_game = None
@@ -268,6 +268,7 @@ class App:
                     # creates an AI object
                     self.artificial_intelligence = Ai(self.board, self.player[-1],
                                                       int(data[13]), data[(i - 1) * 4 - 2])
+
                     self.artificial_intelligence.path = int(data[14])
                     self.artificial_intelligence.sub_path = int(data[14])
 

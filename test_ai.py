@@ -32,8 +32,9 @@ def create_player():
     return Player(1, 'O', True, 'KI')
 
 
-def test_is_winning(create_player, create_board):
+def test_is_winning(mocker, create_player, create_board):
     """Tests the function is_winning"""
+    mocker.patch('time.sleep')
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
@@ -44,8 +45,9 @@ def test_is_winning(create_player, create_board):
     assert ai.is_winning('X', 0) is False
 
 
-def test_move_weak(create_player, create_board):
+def test_move_weak(mocker, create_player, create_board):
     """Tests the function move_weak"""
+    mocker.patch('time.sleep')
     board = create_board
     t1_board = copy.deepcopy(board.get_board())
 
@@ -60,6 +62,7 @@ def test_move_middle(mocker, create_player, create_board):
     """Tests the function move_middle"""
     board = create_board
 
+    mocker.patch('time.sleep')
     player_ai = create_player
     ai = Ai(board, player_ai, 2, 'X')
     ai.move()
@@ -77,6 +80,8 @@ def test_move_middle(mocker, create_player, create_board):
 def test_move_hard_defense(mocker, create_player, create_board):
     """Tests the function move_hard in defense mode"""
     board = create_board
+
+    mocker.patch('time.sleep')
 
     # Defense 1
     new_board = {
@@ -105,11 +110,12 @@ def test_move_hard_defense(mocker, create_player, create_board):
 def test_defense_two(mocker, create_player, create_board):
     """Tests the function move_hard in defense mode on Path 2"""
     board = create_board
+    mocker.patch('time.sleep')
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
     # Defense 2
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': [' ', None],
         'b1': [' ', None],
@@ -135,12 +141,13 @@ def test_defense_two(mocker, create_player, create_board):
 def test_defense_three(mocker, create_player, create_board):
     """Tests the function move_hard in defense mode on Path 3"""
 
+    mocker.patch('time.sleep')
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
     # Path 3
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': [' ', None],
         'b1': [' ', None],
@@ -252,7 +259,7 @@ def test_defense_three(mocker, create_player, create_board):
     # Path 6
     mocker.patch('ai.Ai.count_moves', return_value=7)
 
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': [' ', None],
         'b1': [' ', None],
@@ -279,11 +286,12 @@ def test_defense_three(mocker, create_player, create_board):
 def test_move_hard_attack(mocker, create_player, create_board):
     """Tests the function move_hard in attack mode on Path 1"""
     board = create_board
+    mocker.patch('time.sleep')
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
     # Attack first Move
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': [' ', None],
         'b1': [' ', None],
@@ -302,7 +310,7 @@ def test_move_hard_attack(mocker, create_player, create_board):
            board.get_board()["c2"][1] is not None or board.get_board()["c3"][1] is not None
 
     # Attack 1
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': [' ', None],
         'b1': ['X', 0],
@@ -386,16 +394,17 @@ def test_move_hard_attack(mocker, create_player, create_board):
     assert board.get_board()["a2"][1] is not None
 
 
-def test_move_hard_attack_path_two(create_player, create_board):
+def test_move_hard_attack_path_two(mocker, create_player, create_board):
     """Tests the function move_hard in attack mode on Path 2"""
 
+    mocker.patch('time.sleep')
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
     # Path 2
 
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': ['O', 1],
         'b1': [' ', None],
@@ -473,7 +482,7 @@ def test_move_hard_attack_path_two(create_player, create_board):
     ai.move()
     assert board.get_board()["a2"][1] is not None
 
-    ai.sub_path = None
+    ai.sub_path = 0
     new_board = {
         'a1': [' ', None],
         'b1': ['O', 1],
@@ -489,7 +498,7 @@ def test_move_hard_attack_path_two(create_player, create_board):
     ai.move()
     assert board.get_board()["a1"][1] is not None
 
-    ai.sub_path = None
+    ai.sub_path = 0
     new_board = {
         'a1': ['O', 1],
         'b1': [' ', None],
@@ -505,7 +514,7 @@ def test_move_hard_attack_path_two(create_player, create_board):
     ai.move()
     assert board.get_board()["a3"][1] is not None
 
-    ai.sub_path = None
+    ai.sub_path = 0
     new_board = {
         'a1': ['O', 1],
         'b1': [' ', None],
@@ -521,7 +530,7 @@ def test_move_hard_attack_path_two(create_player, create_board):
     ai.move()
     assert board.get_board()["c1"][1] is not None
 
-    ai.sub_path = None
+    ai.sub_path = 0
     new_board = {
         'a1': ['O', 1],
         'b1': [' ', None],
@@ -537,7 +546,7 @@ def test_move_hard_attack_path_two(create_player, create_board):
     ai.move()
     assert board.get_board()["c3"][1] is not None
 
-    ai.sub_path = None
+    ai.sub_path = 0
     new_board = {
         'a1': ['O', 1],
         'b1': ['X', 0],
@@ -557,13 +566,14 @@ def test_move_hard_attack_path_two(create_player, create_board):
 def test_move_hard_attack_path_three(mocker, create_player, create_board):
     """Tests the function move_hard in attack mode on Path 3"""
 
+    mocker.patch('time.sleep')
     board = create_board
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
     # Path 2
 
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': ['X', 0],
         'b1': [' ', None],
@@ -580,7 +590,7 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     assert board.get_board()["c3"][1] is not None
 
     # Path 4
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': ['X', 0],
         'b1': [' ', None],
@@ -596,7 +606,7 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     ai.move()
     assert board.get_board()["b2"][1] is not None
 
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': ['X', 0],
         'b1': [' ', None],
@@ -614,7 +624,7 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     assert board.get_board()["c3"][1] is not None
 
     # Path 6
-    ai.path = None
+    ai.path = 0
     new_board = {
         'a1': ['X', 0],
         'b1': [' ', None],
@@ -633,10 +643,11 @@ def test_move_hard_attack_path_three(mocker, create_player, create_board):
     assert board.get_board()["c3"][1] is not None
 
 
-def test_set_move_corner(create_player):
+def test_set_move_corner(mocker, create_player):
     """Tests the function set_move_corner"""
     board = Board()
     board.clear()
+    mocker.patch('time.sleep')
     player_ai = create_player
     ai = Ai(board, player_ai, 3, 'X')
 
